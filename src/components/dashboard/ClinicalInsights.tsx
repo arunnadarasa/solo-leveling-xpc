@@ -3,6 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { MobileTabs } from '@/components/ui/mobile-tabs';
+import { MarkdownRenderer } from '@/components/ui/markdown-renderer';
 import { 
   Brain, 
   Activity, 
@@ -256,12 +257,16 @@ export const ClinicalInsights = ({ patient }: ClinicalInsightsProps) => {
                         </div>
                         <div className="bg-primary/5 p-3 rounded-md">
                           <p className="text-sm text-primary mb-2">AI Response:</p>
-                          <p className="text-sm whitespace-pre-wrap break-words leading-relaxed">
-                            {assessment.ai_consultation.response && assessment.ai_consultation.response.length > 10 
-                              ? assessment.ai_consultation.response 
-                              : "AI consultation is processing. Please wait for the analysis to complete."
-                            }
-                          </p>
+                          {assessment.ai_consultation.response && assessment.ai_consultation.response.length > 10 ? (
+                            <MarkdownRenderer 
+                              content={assessment.ai_consultation.response}
+                              className="text-sm"
+                            />
+                          ) : (
+                            <p className="text-sm text-muted-foreground italic">
+                              AI consultation is processing. Please wait for the analysis to complete.
+                            </p>
+                          )}
                         </div>
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between text-xs text-muted-foreground space-y-1 sm:space-y-0">
                           <span>Session: {assessment.ai_consultation.sessionId?.substring(0, 8)}...</span>
