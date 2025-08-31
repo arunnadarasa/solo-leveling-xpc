@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { MobileTabs } from '@/components/ui/mobile-tabs';
 import { MarkdownRenderer } from '@/components/ui/markdown-renderer';
+import { TruncatedContent } from '@/components/ui/truncated-content';
+import { ExpandedResponseModal } from '@/components/ui/expanded-response-modal';
 import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
@@ -293,10 +295,22 @@ export const ClinicalInsights = ({ patient }: ClinicalInsightsProps) => {
                         <div className="bg-primary/5 p-3 rounded-md">
                           <p className="text-sm text-primary mb-2">AI Response:</p>
                           {assessment.ai_consultation.response && assessment.ai_consultation.response.length > 10 ? (
-                            <MarkdownRenderer 
+                            <ExpandedResponseModal
+                              title={`${assessment.ai_consultation.modelVersion} - AI Consultation`}
                               content={assessment.ai_consultation.response}
-                              className="text-sm"
-                            />
+                              confidence={Math.round(assessment.ai_consultation.confidence * 100)}
+                              sessionId={assessment.ai_consultation.sessionId}
+                              generatedDate={assessment.assessment_date}
+                            >
+                              <div className="cursor-pointer">
+                                <TruncatedContent 
+                                  content={assessment.ai_consultation.response}
+                                  className="text-sm"
+                                  maxHeight={150}
+                                  previewLines={4}
+                                />
+                              </div>
+                            </ExpandedResponseModal>
                           ) : (
                             <p className="text-sm text-muted-foreground italic">
                               AI consultation is processing. Please wait for the analysis to complete.
@@ -382,9 +396,19 @@ export const ClinicalInsights = ({ patient }: ClinicalInsightsProps) => {
                           <CardTitle className="text-base mobile-text-responsive">{domain.name}</CardTitle>
                         </CardHeader>
                         <CardContent>
-                          <p className="text-sm text-muted-foreground leading-relaxed">
-                            {domain.review}
-                          </p>
+                          <ExpandedResponseModal
+                            title={`Chart Review - ${domain.name}`}
+                            content={domain.review}
+                          >
+                            <div className="cursor-pointer">
+                              <TruncatedContent 
+                                content={domain.review}
+                                className="text-sm text-muted-foreground leading-relaxed"
+                                maxHeight={100}
+                                previewLines={3}
+                              />
+                            </div>
+                          </ExpandedResponseModal>
                         </CardContent>
                       </Card>
                     ))}
