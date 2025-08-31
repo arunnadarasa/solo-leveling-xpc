@@ -781,6 +781,10 @@ export type Database = {
         Args: { patient_uuid: string; user_uuid: string }
         Returns: boolean
       }
+      is_admin_user: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
