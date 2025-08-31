@@ -121,6 +121,8 @@ export const useProgressivePatients = () => {
           ...patient,
           riskScore: latestRiskAssessment?.overall_risk_score || 0,
           riskLevel: latestRiskAssessment?.risk_level || 'low',
+          chartQualityScore: latestRiskAssessment?.chart_quality_score,
+          chartReviewDomains: latestRiskAssessment?.chart_review_domains,
           conditions: patientConditions.map((c: any) => c.condition_name),
           alerts: patientAlerts.length,
           riskAssessments: patientRisks,

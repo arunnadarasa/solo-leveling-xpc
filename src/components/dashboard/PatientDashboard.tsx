@@ -29,6 +29,11 @@ export interface Patient {
   nextAppointment?: string;
   alerts: number;
   riskAssessments?: any[];
+  chartQualityScore?: number;
+  chartReviewDomains?: Array<{
+    name: string;
+    review: string;
+  }>;
   vitals?: {
     bloodPressure: string;
     heartRate: number;

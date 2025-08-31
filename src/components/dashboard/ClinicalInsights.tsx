@@ -4,6 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { MobileTabs } from '@/components/ui/mobile-tabs';
 import { MarkdownRenderer } from '@/components/ui/markdown-renderer';
+import { useToast } from '@/hooks/use-toast';
+import { useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 import { 
   Brain, 
   Activity, 
@@ -15,7 +18,8 @@ import {
   CheckCircle2,
   Clock,
   TrendingUp,
-  Users
+  Users,
+  AlertTriangle
 } from 'lucide-react';
 import { Patient } from './PatientDashboard';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -25,7 +29,37 @@ interface ClinicalInsightsProps {
 }
 
 export const ClinicalInsights = ({ patient }: ClinicalInsightsProps) => {
+  const { toast } = useToast();
+  const [isRunningChartReview, setIsRunningChartReview] = useState(false);
   const isMobile = useIsMobile();
+
+  const runChartReview = async () => {
+    setIsRunningChartReview(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('xpc-chart-review', {
+        body: { patientId: patient.id }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Chart Review Complete",
+        description: `Chart quality score: ${data.chartQualityScore}%`,
+      });
+      
+      // Refresh the page to show updated data
+      window.location.reload();
+    } catch (error) {
+      console.error('Chart review error:', error);
+      toast({
+        title: "Chart Review Failed", 
+        description: "Unable to complete chart review. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsRunningChartReview(false);
+    }
+  };
   
   const clinicalAlerts = [
     {
@@ -143,6 +177,7 @@ export const ClinicalInsights = ({ patient }: ClinicalInsightsProps) => {
     { value: 'predictions', label: 'Predictions', icon: TrendingUp },
     { value: 'actions', label: 'Care Team', icon: Users },
     { value: 'ai-consult', label: 'AI Consult', icon: Brain },
+    { value: 'chart-review', label: 'Chart Review', icon: FileText },
     { value: 'timeline', label: 'Timeline', icon: Calendar }
   ];
 
@@ -288,6 +323,105 @@ export const ClinicalInsights = ({ patient }: ClinicalInsightsProps) => {
           </div>
         );
 
+      case 'chart-review':
+        return (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-lg font-semibold mobile-text-responsive">Chart Quality Review</h3>
+                <p className="text-sm text-muted-foreground">AI-powered analysis of chart documentation quality</p>
+              </div>
+              <Button
+                onClick={runChartReview}
+                disabled={isRunningChartReview}
+                className="glass-card glass-hover shrink-0"
+                size="sm"
+              >
+                {isRunningChartReview ? (
+                  <>
+                    <div className="animate-spin h-4 w-4 mr-2 border-2 border-current border-t-transparent rounded-full" />
+                    Reviewing...
+                  </>
+                ) : (
+                  <>
+                    <FileText className="h-4 w-4 mr-2" />
+                    Run Review
+                  </>
+                )}
+              </Button>
+            </div>
+
+            {patient.chartQualityScore ? (
+              <>
+                <Card className="glass-card border-white/20 backdrop-blur-sm">
+                  <CardContent className="pt-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-2">
+                        <CheckCircle2 className="h-5 w-5 text-success" />
+                        <span className="font-medium mobile-text-responsive">Overall Chart Quality</span>
+                      </div>
+                      <Badge variant={patient.chartQualityScore >= 80 ? "default" : patient.chartQualityScore >= 60 ? "secondary" : "destructive"} 
+                             className="glass-medium">
+                        {patient.chartQualityScore}% Quality Score
+                      </Badge>
+                    </div>
+                    <div className="w-full bg-muted/20 rounded-full h-2 mb-4">
+                      <div 
+                        className="bg-gradient-to-r from-primary to-success h-2 rounded-full transition-all duration-500"
+                        style={{ width: `${patient.chartQualityScore}%` }}
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {patient.chartReviewDomains && patient.chartReviewDomains.length > 0 && (
+                  <div className="space-y-3">
+                    {patient.chartReviewDomains.map((domain: any, index: number) => (
+                      <Card key={index} className="glass-card border-white/20 backdrop-blur-sm">
+                        <CardHeader className="pb-3">
+                          <CardTitle className="text-base mobile-text-responsive">{domain.name}</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <p className="text-sm text-muted-foreground leading-relaxed">
+                            {domain.review}
+                          </p>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                )}
+              </>
+            ) : (
+              <Card className="glass-card border-white/20 backdrop-blur-sm">
+                <CardContent className="pt-6 text-center">
+                  <FileText className="h-8 w-8 sm:h-12 sm:w-12 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-lg font-medium mb-2 mobile-text-responsive">No Chart Review Available</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Run a chart review to analyze documentation quality and get AI-powered insights.
+                  </p>
+                  <Button 
+                    onClick={runChartReview} 
+                    disabled={isRunningChartReview}
+                    className="glass-card glass-hover"
+                  >
+                    {isRunningChartReview ? (
+                      <>
+                        <div className="animate-spin h-4 w-4 mr-2 border-2 border-current border-t-transparent rounded-full" />
+                        Analyzing Chart...
+                      </>
+                    ) : (
+                      <>
+                        <FileText className="h-4 w-4 mr-2" />
+                        Start Chart Review
+                      </>
+                    )}
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        );
+
       case 'timeline':
         return (
           <div className="space-y-4">
@@ -350,11 +484,12 @@ export const ClinicalInsights = ({ patient }: ClinicalInsightsProps) => {
           </MobileTabs>
         ) : (
           <Tabs defaultValue="alerts" className="w-full">
-            <TabsList className="grid w-full grid-cols-5">
+            <TabsList className="grid w-full grid-cols-6">
               <TabsTrigger value="alerts">Alerts</TabsTrigger>
               <TabsTrigger value="predictions">Predictions</TabsTrigger>
               <TabsTrigger value="actions">Care Team</TabsTrigger>
               <TabsTrigger value="ai-consult">AI Consult</TabsTrigger>
+              <TabsTrigger value="chart-review">Chart Review</TabsTrigger>
               <TabsTrigger value="timeline">Timeline</TabsTrigger>
             </TabsList>
             {tabsConfig.map(tab => (

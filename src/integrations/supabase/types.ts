@@ -668,6 +668,8 @@ export type Database = {
           ai_consultation: Json | null
           ai_recommendations: Json | null
           assessment_date: string
+          chart_quality_score: number | null
+          chart_review_domains: Json | null
           created_at: string
           expires_at: string
           id: string
@@ -678,11 +680,14 @@ export type Database = {
           risk_factors: Json
           risk_level: string
           updated_at: string
+          xpc_chart_review: Json | null
         }
         Insert: {
           ai_consultation?: Json | null
           ai_recommendations?: Json | null
           assessment_date?: string
+          chart_quality_score?: number | null
+          chart_review_domains?: Json | null
           created_at?: string
           expires_at?: string
           id?: string
@@ -693,11 +698,14 @@ export type Database = {
           risk_factors?: Json
           risk_level: string
           updated_at?: string
+          xpc_chart_review?: Json | null
         }
         Update: {
           ai_consultation?: Json | null
           ai_recommendations?: Json | null
           assessment_date?: string
+          chart_quality_score?: number | null
+          chart_review_domains?: Json | null
           created_at?: string
           expires_at?: string
           id?: string
@@ -708,6 +716,7 @@ export type Database = {
           risk_factors?: Json
           risk_level?: string
           updated_at?: string
+          xpc_chart_review?: Json | null
         }
         Relationships: [
           {
