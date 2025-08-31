@@ -155,7 +155,7 @@ export const ClinicalInsights = ({ patient }: ClinicalInsightsProps) => {
             {clinicalAlerts.map((alert, index) => {
               const IconComponent = alert.icon;
               return (
-                <div key={index} className="flex items-start space-x-3 p-3 rounded-lg border mobile-card">
+                <div key={index} className="flex items-start space-x-3 p-3 rounded-lg border mobile-card glass-hover animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
                   <IconComponent className={`w-5 h-5 mt-0.5 text-${getAlertColor(alert.type)} flex-shrink-0`} />
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-1 sm:space-y-0">
@@ -183,7 +183,7 @@ export const ClinicalInsights = ({ patient }: ClinicalInsightsProps) => {
           <div className="space-y-4">
             <h3 className="font-semibold mobile-text-responsive">Risk Predictions</h3>
             {predictionInsights.map((prediction, index) => (
-              <div key={index} className="p-4 rounded-lg border mobile-card">
+              <div key={index} className="p-4 rounded-lg border mobile-card glass-light hover-scale animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2 space-y-2 sm:space-y-0">
                   <h4 className="font-medium mobile-text-responsive">{prediction.condition}</h4>
                   <Badge className={`bg-${getRiskColor(prediction.type)} text-${getRiskColor(prediction.type)}-foreground self-start sm:self-auto`}>
@@ -210,7 +210,7 @@ export const ClinicalInsights = ({ patient }: ClinicalInsightsProps) => {
           <div className="space-y-4">
             <h3 className="font-semibold mobile-text-responsive">Care Team Actions</h3>
             {careTeamActions.map((action, index) => (
-              <div key={index} className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 rounded-lg border mobile-card space-y-2 sm:space-y-0">
+              <div key={index} className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 rounded-lg border mobile-card glass-hover animate-fade-in space-y-2 sm:space-y-0" style={{ animationDelay: `${index * 100}ms` }}>
                 <div className="flex items-center space-x-3 min-w-0 flex-1">
                   <Stethoscope className="w-4 h-4 text-primary flex-shrink-0" />
                   <div className="min-w-0 flex-1">
@@ -332,10 +332,10 @@ export const ClinicalInsights = ({ patient }: ClinicalInsightsProps) => {
   };
 
   return (
-    <Card className="mobile-card">
+    <Card className="mobile-card glass-card animate-fade-in">
       <CardHeader className="pb-3">
-        <CardTitle className="flex items-center mobile-text-responsive">
-          <Brain className="w-5 h-5 mr-2 text-primary" />
+        <CardTitle className="flex items-center mobile-text-responsive glow-text">
+          <Brain className="w-5 h-5 mr-2 text-primary animate-pulse" />
           AI Clinical Insights
         </CardTitle>
       </CardHeader>

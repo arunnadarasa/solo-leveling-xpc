@@ -59,26 +59,26 @@ export const RiskVisualization = ({ patient }: RiskVisualizationProps) => {
   };
 
   return (
-    <Card>
+    <Card className="glass-card animate-fade-in">
       <CardHeader>
-        <CardTitle className="flex items-center">
-          <AlertTriangle className="w-5 h-5 mr-2 text-warning" />
+        <CardTitle className="flex items-center glow-text">
+          <AlertTriangle className="w-5 h-5 mr-2 text-warning animate-pulse" />
           Risk Analysis
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Overall Risk Score */}
-        <div className="text-center p-6 bg-muted/50 rounded-lg">
-          <div className="text-3xl font-bold text-critical mb-2">{patient.riskScore}</div>
+        <div className="text-center p-6 glass-medium rounded-lg animate-scale-in">
+          <div className="text-3xl font-bold text-critical mb-2 glow-text">{patient.riskScore}</div>
           <div className="text-sm text-muted-foreground">Overall Risk Score</div>
-          <Progress value={patient.riskScore} className="mt-3" />
+          <Progress value={patient.riskScore} className="mt-3 glass-progress" />
         </div>
 
         {/* Risk Factor Breakdown */}
         <div className="space-y-4">
           <h3 className="text-lg font-semibold">Risk Factor Analysis</h3>
           {riskFactors.map((factor, index) => (
-            <div key={index} className="space-y-2">
+            <div key={index} className="space-y-2 glass-light p-3 rounded-lg hover-scale animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <span className="font-medium">{factor.name}</span>
@@ -102,13 +102,13 @@ export const RiskVisualization = ({ patient }: RiskVisualizationProps) => {
         </div>
 
         {/* AI Recommendations */}
-        <div className="mt-6 p-4 bg-info/10 rounded-lg border border-info/20">
-          <h3 className="font-semibold text-info mb-2">AI Recommendations</h3>
+        <div className="mt-6 p-4 glass-glow rounded-lg border border-info/20 animate-fade-in">
+          <h3 className="font-semibold text-info mb-2 glow-text">AI Recommendations</h3>
           <ul className="space-y-1 text-sm">
-            <li>• Immediate cardiology consultation recommended</li>
-            <li>• Adjust BP medication dosage</li>
-            <li>• Schedule diabetes educator appointment</li>
-            <li>• Implement medication adherence monitoring</li>
+            <li className="animate-fade-in animation-delay-100">• Immediate cardiology consultation recommended</li>
+            <li className="animate-fade-in animation-delay-200">• Adjust BP medication dosage</li>
+            <li className="animate-fade-in animation-delay-300">• Schedule diabetes educator appointment</li>
+            <li className="animate-fade-in animation-delay-400">• Implement medication adherence monitoring</li>
           </ul>
         </div>
       </CardContent>

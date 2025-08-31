@@ -100,8 +100,8 @@ export const PatientDashboard = () => {
   const isMobile = useIsMobile();
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-background gradient-mesh">
+      <div className="max-w-7xl mx-auto animate-fade-in">
         {/* Mobile-optimized Header */}
         <MobileHeader
           totalAlerts={totalAlerts}
@@ -121,52 +121,52 @@ export const PatientDashboard = () => {
 
           {/* Overview Cards - Mobile Responsive */}
           <div className="mobile-grid-responsive">
-            <Card className="mobile-card">
+            <Card className="mobile-card glass-card hover-scale animate-fade-in animation-delay-100">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Total Patients</CardTitle>
-                <Users className="h-4 w-4 text-muted-foreground" />
+                <Users className="h-4 w-4 text-muted-foreground animate-pulse" />
               </CardHeader>
               <CardContent className="pt-2">
-                <div className="text-xl sm:text-2xl font-bold">{patients.length}</div>
+                <div className="text-xl sm:text-2xl font-bold glow-text">{patients.length}</div>
                 <p className="text-xs text-muted-foreground">
                   Active in system
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="mobile-card">
+            <Card className="mobile-card glass-card hover-scale animate-fade-in animation-delay-200 glass-glow">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">High Risk</CardTitle>
-                <AlertTriangle className="h-4 w-4 text-warning" />
+                <AlertTriangle className="h-4 w-4 text-warning animate-pulse" />
               </CardHeader>
               <CardContent className="pt-2">
-                <div className="text-xl sm:text-2xl font-bold text-warning">{highRiskPatients}</div>
+                <div className="text-xl sm:text-2xl font-bold text-warning glow-text">{highRiskPatients}</div>
                 <p className="text-xs text-muted-foreground">
                   Require attention
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="mobile-card">
+            <Card className="mobile-card glass-card hover-scale animate-fade-in animation-delay-300 glass-glow">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Active Alerts</CardTitle>
-                <Activity className="h-4 w-4 text-critical" />
+                <Activity className="h-4 w-4 text-critical animate-pulse" />
               </CardHeader>
               <CardContent className="pt-2">
-                <div className="text-xl sm:text-2xl font-bold text-critical">{totalAlerts}</div>
+                <div className="text-xl sm:text-2xl font-bold text-critical glow-text">{totalAlerts}</div>
                 <p className="text-xs text-muted-foreground">
                   Across all patients
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="mobile-card">
+            <Card className="mobile-card glass-card hover-scale animate-fade-in animation-delay-400">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">AI Accuracy</CardTitle>
-                <Brain className="h-4 w-4 text-success" />
+                <Brain className="h-4 w-4 text-success animate-pulse" />
               </CardHeader>
               <CardContent className="pt-2">
-                <div className="text-xl sm:text-2xl font-bold text-success">94%</div>
+                <div className="text-xl sm:text-2xl font-bold text-success glow-text">94%</div>
                 <p className="text-xs text-muted-foreground">
                   Risk prediction accuracy
                 </p>
@@ -189,12 +189,12 @@ export const PatientDashboard = () => {
 
           {/* Error State */}
           {error && (
-            <Card className="border-destructive mobile-card">
+            <Card className="border-destructive mobile-card glass-card animate-fade-in">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <AlertTriangle className="w-8 h-8 text-destructive mx-auto mb-4" />
+                  <AlertTriangle className="w-8 h-8 text-destructive mx-auto mb-4 animate-pulse" />
                   <p className="text-destructive mb-4 mobile-text-responsive">{error}</p>
-                  <Button onClick={refetch} className="mobile-button">Try Again</Button>
+                  <Button onClick={refetch} className="mobile-button glass-button">Try Again</Button>
                 </div>
               </CardContent>
             </Card>
@@ -240,7 +240,7 @@ export const PatientDashboard = () => {
                       ) : (
                         <>
                           {/* Patient Header - Mobile Optimized */}
-                          <Card className="mobile-card">
+                          <Card className="mobile-card glass-card animate-fade-in">
                             <CardHeader className="pb-3">
                               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
                                 <div className="min-w-0 flex-1">
@@ -298,9 +298,9 @@ export const PatientDashboard = () => {
                       )}
                     </>
                   ) : (
-                    <Card className="mobile-card h-64 sm:h-96 flex items-center justify-center">
+                    <Card className="mobile-card h-64 sm:h-96 flex items-center justify-center glass-card animate-fade-in">
                       <div className="text-center">
-                        <Heart className="h-8 w-8 sm:h-12 sm:w-12 text-muted-foreground mx-auto mb-4" />
+                        <Heart className="h-8 w-8 sm:h-12 sm:w-12 text-muted-foreground mx-auto mb-4 animate-pulse" />
                         <p className="text-base sm:text-lg text-muted-foreground">Select a patient to view details</p>
                       </div>
                     </Card>

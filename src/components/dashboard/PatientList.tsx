@@ -24,10 +24,10 @@ export const PatientList = ({ patients, selectedPatient, onSelectPatient, getRis
   const sortedPatients = [...filteredPatients].sort((a, b) => b.riskScore - a.riskScore);
 
   return (
-    <Card className="h-[800px]">
+    <Card className="h-[800px] glass-card animate-fade-in">
       <CardHeader>
-        <CardTitle className="flex items-center">
-          <User className="w-5 h-5 mr-2" />
+        <CardTitle className="flex items-center glow-text">
+          <User className="w-5 h-5 mr-2 animate-pulse" />
           Patient List ({filteredPatients.length})
         </CardTitle>
       </CardHeader>
@@ -41,10 +41,10 @@ export const PatientList = ({ patients, selectedPatient, onSelectPatient, getRis
             {sortedPatients.map((patient) => (
               <div
                 key={patient.id}
-                className={`p-4 rounded-lg border cursor-pointer transition-all hover:shadow-md ${
+                className={`p-4 rounded-lg border cursor-pointer transition-all hover:shadow-md glass-hover animate-fade-in ${
                   selectedPatient?.id === patient.id 
-                    ? 'border-primary bg-primary/5' 
-                    : 'border-border hover:border-primary/50'
+                    ? 'border-primary bg-primary/10 glass-glow' 
+                    : 'border-border hover:border-primary/50 glass-light'
                 }`}
                 onClick={() => onSelectPatient(patient)}
               >
