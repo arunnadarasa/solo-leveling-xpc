@@ -304,14 +304,18 @@ async function keywellMedGemmaAnalysis(patient: any) {
   console.log('Starting Keywell MedGemma 4B analysis...');
   
   const keywellPat = Deno.env.get('KEYWELL_PAT');
-  const endpoint = 'https://dbc-8755b6f3-3560.cloud.databricks.com/serving-endpoints/XPC_medgemma_4b_it_v2/invocations';
+  const endpoint = 'https://dbc-8755b6f3-3560.cloud.databricks.com/serving-endpoints/keywell-u2m-testing/invocations';
   
   if (!keywellPat) {
     throw new Error('Keywell PAT not configured');
   }
 
+  // Generate a unique SID for this session
+  const sid = `user_${crypto.randomUUID().replace(/-/g, '').substring(0, 32)}`;
+
   try {
     // Step 1: Initialize session
+    console.log('Initializing Keywell session with SID:', sid);
     const sessionResponse = await fetch(endpoint, {
       method: 'POST',
       headers: {
@@ -320,21 +324,29 @@ async function keywellMedGemmaAnalysis(patient: any) {
       },
       body: JSON.stringify({
         inputs: {
-          question: ["Initialize New Session"],
-          model_id: "362a8f7e-1144-4bfc-8b4c-e397ecd2f466",
-          sid: "user_42924dffd45a4297b37a6ab706f0b41f"
+          question: ["Hello"],
+          model_id: "6c2eacee-d987-4432-b11d-d2b92eb0325d",
+          sid: sid
         }
       })
     });
 
     if (!sessionResponse.ok) {
-      throw new Error(`Session initialization failed: ${sessionResponse.status}`);
+      const errorText = await sessionResponse.text();
+      console.error('Session initialization failed:', sessionResponse.status, errorText);
+      throw new Error(`Session initialization failed: ${sessionResponse.status} - ${errorText}`);
     }
 
     const sessionData = await sessionResponse.json();
-    const sessionId = sessionData.predictions?.[0]?.session_id;
+    console.log('Session response:', JSON.stringify(sessionData, null, 2));
+    
+    // Try different possible response structures for session ID
+    const sessionId = sessionData.predictions?.[0]?.session_id || 
+                     sessionData.session_id || 
+                     sessionData.predictions?.[0]?.outputs?.session_id;
 
     if (!sessionId) {
+      console.error('No session ID found in response:', JSON.stringify(sessionData, null, 2));
       throw new Error('Failed to get session ID from Keywell');
     }
 
@@ -369,7 +381,7 @@ Please provide clinical decision support recommendations based on current medica
         inputs: {
           question: [clinicalQuery],
           model_id: "6c2eacee-d987-4432-b11d-d2b92eb0325d",
-          sid: "user_42924dffd45a4297b37a6ab706f0b41f",
+          sid: sid,
           session_id: sessionId
         }
       })
