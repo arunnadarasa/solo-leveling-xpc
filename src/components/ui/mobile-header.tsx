@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { AlertTriangle, Brain, Activity, RefreshCw, Menu, X } from 'lucide-react';
+import { AlertTriangle, Brain, Activity, RefreshCw, Menu, X, LogOut, User } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useAuth } from '@/hooks/useAuth';
 
 interface MobileHeaderProps {
   totalAlerts: number;
@@ -26,6 +27,7 @@ export const MobileHeader = ({
 }: MobileHeaderProps) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const isMobile = useIsMobile();
+  const { user, signOut } = useAuth();
 
   if (!isMobile) {
     return (
@@ -59,6 +61,18 @@ export const MobileHeader = ({
             <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
             Refresh
           </Button>
+          <div className="flex items-center space-x-2">
+            {user && (
+              <div className="flex items-center space-x-2 px-3 py-1 bg-muted rounded-md">
+                <User className="w-4 h-4" />
+                <span className="text-sm">{user.email}</span>
+              </div>
+            )}
+            <Button variant="outline" onClick={signOut}>
+              <LogOut className="w-4 h-4 mr-2" />
+              Sign Out
+            </Button>
+          </div>
         </div>
       </div>
     );
@@ -128,6 +142,25 @@ export const MobileHeader = ({
                 </p>
               </div>
             )}
+            <div className="border-t pt-4">
+              {user && (
+                <div className="flex items-center space-x-2 mb-3 p-2 bg-muted rounded-lg">
+                  <User className="w-4 h-4" />
+                  <span className="text-sm">{user.email}</span>
+                </div>
+              )}
+              <Button 
+                className="w-full mobile-button"
+                variant="outline"
+                onClick={() => {
+                  signOut();
+                  setMenuOpen(false);
+                }}
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Sign Out
+              </Button>
+            </div>
           </div>
         </SheetContent>
       </Sheet>
