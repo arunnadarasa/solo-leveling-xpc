@@ -53,8 +53,8 @@ return (
         />
       </video>
       {/* Enhanced overlay for better text readability - Full page coverage */}
-      <div className="fixed inset-0 bg-black/40 z-[1]" />
-      <div className="fixed inset-0 bg-gradient-to-b from-background/10 via-transparent to-background/30 z-[1]" />
+      <div className="fixed inset-0 bg-black/15 z-[1]" />
+      <div className="fixed inset-0 bg-gradient-to-b from-background/5 via-transparent to-background/5 z-[1]" />
 
       {/* Hero Content */}
       <div className="relative z-10 min-h-screen flex items-center justify-center px-4">
