@@ -17,6 +17,21 @@ import { useToast } from '@/hooks/use-toast';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { CanvasIntegration } from '@/components/canvas/CanvasIntegration';
 
+const getErrorMessage = (errorCode: string, defaultMessage: string): string => {
+  switch (errorCode) {
+    case 'KEYWELL_CONFIG_ERROR':
+      return 'Keywell AI service is not configured. Please contact support.';
+    case 'KEYWELL_SESSION_ERROR':
+      return 'Unable to connect to Keywell AI. The service may be temporarily down.';
+    case 'KEYWELL_CONSULTATION_ERROR':
+      return 'AI consultation failed. Please try PhenoML analysis instead.';
+    case 'PATIENT_NOT_FOUND':
+      return 'Patient data not found. Please refresh and try again.';
+    default:
+      return defaultMessage || 'AI analysis failed. Please try again later.';
+  }
+};
+
 export interface Patient {
   id: string;
   name: string;
@@ -80,6 +95,11 @@ export const PatientDashboard = () => {
 
       if (error) throw error;
 
+      if (!data?.success) {
+        const errorMessage = getErrorMessage(data?.errorCode, data?.error);
+        throw new Error(errorMessage);
+      }
+
       toast({
         title: `${type === 'phenoml' ? 'PhenoML' : type === 'metriport' ? 'Metriport' : 'Keywell MedGemma'} Analysis Complete`,
         description: `AI analysis completed successfully. Risk score updated to ${data.analysis.riskScore}`,
@@ -89,10 +109,11 @@ export const PatientDashboard = () => {
       await refetch();
       
     } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to complete AI analysis. Please try again.';
       console.error('AI Analysis error:', err);
       toast({
         title: "Analysis Failed",
-        description: "Failed to complete AI analysis. Please try again.",
+        description: errorMessage,
         variant: "destructive"
       });
     } finally {

@@ -52,10 +52,12 @@ export const ClinicalInsights = ({ patient }: ClinicalInsightsProps) => {
       // Refresh the page to show updated data
       window.location.reload();
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Chart review failed. Please try again later.';
       console.error('Chart review error:', error);
+      
       toast({
         title: "Chart Review Failed", 
-        description: "Unable to complete chart review. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {

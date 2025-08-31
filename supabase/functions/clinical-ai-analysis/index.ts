@@ -3,7 +3,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const corsHeaders = {
-  'Access-Control-Allow-Origin': 'https://ddjjtumgquimsgqwkgvd.supabase.co',
+  'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
@@ -87,9 +87,29 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('Error in clinical-ai-analysis:', error);
+    
+    // Provide more specific error messages
+    let errorMessage = error.message;
+    let errorCode = 'ANALYSIS_ERROR';
+    
+    if (error.message.includes('Patient not found')) {
+      errorCode = 'PATIENT_NOT_FOUND';
+    } else if (error.message.includes('Keywell PAT not configured')) {
+      errorCode = 'KEYWELL_CONFIG_ERROR';
+      errorMessage = 'Keywell AI service is not configured. Please check API credentials.';
+    } else if (error.message.includes('Session initialization failed')) {
+      errorCode = 'KEYWELL_SESSION_ERROR';
+      errorMessage = 'Unable to connect to Keywell AI service. The service may be temporarily unavailable.';
+    } else if (error.message.includes('Consultation failed')) {
+      errorCode = 'KEYWELL_CONSULTATION_ERROR';
+      errorMessage = 'AI consultation failed. Please try again or use an alternative analysis method.';
+    }
+    
     return new Response(JSON.stringify({ 
-      error: error.message,
-      success: false 
+      error: errorMessage,
+      errorCode,
+      success: false,
+      timestamp: new Date().toISOString()
     }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
