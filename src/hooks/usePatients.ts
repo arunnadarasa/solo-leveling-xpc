@@ -113,6 +113,7 @@ export const usePatients = () => {
           conditions: patient.patient_conditions?.map((c: any) => c.condition_name) || [],
           lastVisit: patient.updated_at.split('T')[0],
           alerts: activeAlerts.length,
+          riskAssessments: patient.risk_assessments || [],
           vitals: latestVitals ? {
             bloodPressure: `${latestVitals.blood_pressure_systolic || 0}/${latestVitals.blood_pressure_diastolic || 0}`,
             heartRate: latestVitals.heart_rate || 0,

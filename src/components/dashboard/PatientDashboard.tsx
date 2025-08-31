@@ -23,6 +23,7 @@ export interface Patient {
   lastVisit: string;
   nextAppointment?: string;
   alerts: number;
+  riskAssessments?: any[];
   vitals?: {
     bloodPressure: string;
     heartRate: number;
@@ -47,7 +48,7 @@ export const PatientDashboard = () => {
     }
   };
 
-  const runAIAnalysis = async (type: 'phenoml' | 'metriport') => {
+  const runAIAnalysis = async (type: 'phenoml' | 'metriport' | 'keywell') => {
     if (!selectedPatient) {
       toast({
         title: "No Patient Selected",
@@ -70,7 +71,7 @@ export const PatientDashboard = () => {
       if (error) throw error;
 
       toast({
-        title: `${type === 'phenoml' ? 'PhenoML' : 'Metriport'} Analysis Complete`,
+        title: `${type === 'phenoml' ? 'PhenoML' : type === 'metriport' ? 'Metriport' : 'Keywell MedGemma'} Analysis Complete`,
         description: `AI analysis completed successfully. Risk score updated to ${data.analysis.riskScore}`,
       });
 

@@ -141,10 +141,11 @@ export const ClinicalInsights = ({ patient }: ClinicalInsightsProps) => {
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="alerts" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="alerts">Alerts</TabsTrigger>
             <TabsTrigger value="predictions">Predictions</TabsTrigger>
             <TabsTrigger value="actions">Care Team</TabsTrigger>
+            <TabsTrigger value="ai-consult">AI Consult</TabsTrigger>
             <TabsTrigger value="timeline">Timeline</TabsTrigger>
           </TabsList>
 
@@ -218,6 +219,58 @@ export const ClinicalInsights = ({ patient }: ClinicalInsightsProps) => {
                 </div>
               </div>
             ))}
+          </TabsContent>
+
+          <TabsContent value="ai-consult" className="space-y-4">
+            <h3 className="font-semibold">MedGemma AI Consultation</h3>
+            {patient.riskAssessments?.some((r: any) => r.aiConsultation) ? (
+              <div className="space-y-4">
+                {patient.riskAssessments
+                  .filter((r: any) => r.aiConsultation)
+                  .map((assessment: any, index: number) => (
+                    <div key={index} className="p-4 rounded-lg border border-primary/20 bg-primary/5">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center space-x-2">
+                          <Brain className="w-4 h-4 text-primary" />
+                          <span className="font-medium text-primary">
+                            {assessment.aiConsultation.modelVersion}
+                          </span>
+                        </div>
+                        <Badge variant="secondary">
+                          {Math.round(assessment.aiConsultation.confidence * 100)}% Confidence
+                        </Badge>
+                      </div>
+                      <div className="space-y-3">
+                        <div>
+                          <h4 className="font-medium text-sm mb-1">Clinical Query:</h4>
+                          <p className="text-xs text-muted-foreground bg-muted/50 p-2 rounded">
+                            {assessment.aiConsultation.query.substring(0, 200)}...
+                          </p>
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-sm mb-1">AI Response:</h4>
+                          <div className="text-sm bg-background p-3 rounded border">
+                            {assessment.aiConsultation.response.substring(0, 500)}
+                            {assessment.aiConsultation.response.length > 500 && '...'}
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between text-xs text-muted-foreground">
+                          <span>Session: {assessment.aiConsultation.sessionId?.substring(0, 8)}...</span>
+                          <span>Generated: {new Date(assessment.assessment_date).toLocaleString()}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <Brain className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                <h4 className="font-medium text-muted-foreground mb-2">No AI Consultation Available</h4>
+                <p className="text-sm text-muted-foreground">
+                  Run Keywell MedGemma analysis to get AI-powered clinical insights
+                </p>
+              </div>
+            )}
           </TabsContent>
 
           <TabsContent value="timeline" className="space-y-4">

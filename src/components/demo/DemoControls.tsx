@@ -5,7 +5,7 @@ import { Brain, Activity, Zap, Database, TrendingUp, Users } from 'lucide-react'
 import { useState } from 'react';
 
 interface DemoControlsProps {
-  onRunAnalysis: (type: 'phenoml' | 'metriport') => void;
+  onRunAnalysis: (type: 'phenoml' | 'metriport' | 'keywell') => void;
   isAnalyzing: boolean;
   selectedPatient: any;
 }
@@ -29,6 +29,14 @@ export const DemoControls = ({ onRunAnalysis, isAnalyzing, selectedPatient }: De
       color: 'info',
       action: () => onRunAnalysis('metriport'),
       tags: ['Interoperability', 'FHIR', 'Comprehensive']
+    },
+    {
+      title: 'Keywell MedGemma AI Consultation',
+      description: 'Evidence-based clinical decision support using Google MedGemma 4B model',
+      icon: Brain,
+      color: 'success',
+      action: () => onRunAnalysis('keywell'),
+      tags: ['MedGemma', 'Clinical AI', 'Evidence-based']
     },
     {
       title: 'Predictive Analytics',
@@ -85,18 +93,18 @@ export const DemoControls = ({ onRunAnalysis, isAnalyzing, selectedPatient }: De
           </div>
 
           {/* Feature Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {demoFeatures.map((feature, index) => {
               const IconComponent = feature.icon;
               const isDisabled = !selectedPatient || isAnalyzing || 
-                (feature.title.includes('Predictive') || feature.title.includes('Care Team'));
+                (feature.title.includes('Predictive') || feature.title.includes('Care Team Coordination'));
               
               return (
                 <Card key={index} className={`border-${feature.color}/20 hover:border-${feature.color}/40 transition-colors`}>
                   <CardHeader className="pb-2">
                     <div className="flex items-center justify-between">
                       <IconComponent className={`w-5 h-5 text-${feature.color}`} />
-                      {(feature.title.includes('PhenoML') || feature.title.includes('Metriport')) && (
+                      {(feature.title.includes('PhenoML') || feature.title.includes('Metriport') || feature.title.includes('Keywell')) && (
                         <Badge variant="outline" className="text-xs">
                           Integrated
                         </Badge>
@@ -124,9 +132,9 @@ export const DemoControls = ({ onRunAnalysis, isAnalyzing, selectedPatient }: De
                       onClick={feature.action}
                       disabled={isDisabled}
                     >
-                      {isAnalyzing && (feature.title.includes('PhenoML') || feature.title.includes('Metriport')) 
+                      {isAnalyzing && (feature.title.includes('PhenoML') || feature.title.includes('Metriport') || feature.title.includes('Keywell')) 
                         ? 'Processing...' 
-                        : feature.title.includes('Predictive') || feature.title.includes('Care Team')
+                        : feature.title.includes('Predictive') || feature.title.includes('Care Team Coordination')
                           ? 'Coming Soon'
                           : 'Run Analysis'
                       }
@@ -144,7 +152,8 @@ export const DemoControls = ({ onRunAnalysis, isAnalyzing, selectedPatient }: De
               <li>1. Select a patient from the list on the left</li>
               <li>2. Click "Run PhenoML Analysis" to see AI-powered risk assessment</li>
               <li>3. Click "Metriport Integration" to simulate comprehensive health data analysis</li>
-              <li>4. Observe real-time risk score updates and clinical recommendations</li>
+              <li>4. Click "Keywell MedGemma AI" to get evidence-based clinical consultation</li>
+              <li>5. Observe real-time risk score updates and AI clinical recommendations</li>
             </ol>
           </div>
         </CardContent>
