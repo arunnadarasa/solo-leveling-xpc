@@ -36,9 +36,9 @@ return (
       </div>
 
       {/* Video Background */}
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-0 bg-gradient-to-br from-background/90 via-background/70 to-background/90">
         <video
-          className="w-full h-full object-cover"
+          className="w-full h-full object-contain"
           autoPlay
           muted
           loop
