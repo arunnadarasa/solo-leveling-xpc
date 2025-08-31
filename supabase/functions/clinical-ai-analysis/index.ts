@@ -304,11 +304,22 @@ async function keywellMedGemmaAnalysis(patient: any) {
   console.log('Starting Keywell MedGemma 4B analysis...');
   
   const keywellPat = Deno.env.get('KEYWELL_PAT');
+  const keywellUsername = Deno.env.get('KEYWELL_USERNAME');
+  const keywellPassword = Deno.env.get('KEYWELL_PASSWORD');
   const endpoint = 'https://dbc-8755b6f3-3560.cloud.databricks.com/serving-endpoints/keywell-u2m-testing/invocations';
+  const correctModelId = '362a8f7e-1144-4bfc-8b4c-e397ecd2f466'; // Using the correct model ID from Keywell platform
   
   if (!keywellPat) {
     throw new Error('Keywell PAT not configured');
   }
+
+  console.log('Keywell credentials available:', {
+    hasPAT: !!keywellPat,
+    hasUsername: !!keywellUsername,
+    hasPassword: !!keywellPassword,
+    endpoint,
+    modelId: correctModelId
+  });
 
   // Generate a unique SID for this session
   const sid = `user_${crypto.randomUUID().replace(/-/g, '').substring(0, 32)}`;
@@ -316,20 +327,27 @@ async function keywellMedGemmaAnalysis(patient: any) {
   try {
     // Step 1: Initialize session
     console.log('Initializing Keywell session with SID:', sid);
+    const sessionRequestBody = {
+      inputs: {
+        question: ["Hello"],
+        model_id: correctModelId,
+        sid: sid
+      }
+    };
+    
+    console.log('Session request body:', JSON.stringify(sessionRequestBody, null, 2));
+    
     const sessionResponse = await fetch(endpoint, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${keywellPat}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        inputs: {
-          question: ["Hello"],
-          model_id: "6c2eacee-d987-4432-b11d-d2b92eb0325d",
-          sid: sid
-        }
-      })
+      body: JSON.stringify(sessionRequestBody)
     });
+
+    console.log('Session response status:', sessionResponse.status);
+    console.log('Session response headers:', Object.fromEntries(sessionResponse.headers.entries()));
 
     if (!sessionResponse.ok) {
       const errorText = await sessionResponse.text();
@@ -340,13 +358,17 @@ async function keywellMedGemmaAnalysis(patient: any) {
     const sessionData = await sessionResponse.json();
     console.log('Session response:', JSON.stringify(sessionData, null, 2));
     
-    // Try different possible response structures for session ID
-    const sessionId = sessionData.predictions?.[0]?.session_id || 
+    // Based on the logs, the session ID is in sessionData.predictions.session_id
+    const sessionId = sessionData.predictions?.session_id || 
+                     sessionData.predictions?.[0]?.session_id || 
                      sessionData.session_id || 
                      sessionData.predictions?.[0]?.outputs?.session_id;
 
     if (!sessionId) {
-      console.error('No session ID found in response:', JSON.stringify(sessionData, null, 2));
+      console.error('No session ID found in response. Available keys:', Object.keys(sessionData));
+      if (sessionData.predictions) {
+        console.error('Predictions structure:', JSON.stringify(sessionData.predictions, null, 2));
+      }
       throw new Error('Failed to get session ID from Keywell');
     }
 
@@ -380,7 +402,7 @@ Please provide clinical decision support recommendations based on current medica
       body: JSON.stringify({
         inputs: {
           question: [clinicalQuery],
-          model_id: "6c2eacee-d987-4432-b11d-d2b92eb0325d",
+          model_id: correctModelId,
           sid: sid,
           session_id: sessionId
         }
