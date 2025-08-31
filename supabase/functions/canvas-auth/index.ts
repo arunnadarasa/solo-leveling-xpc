@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 
 const corsHeaders = {
-  'Access-Control-Allow-Origin': window?.location?.origin || 'https://ddjjtumgquimsgqwkgvd.supabase.co',
+  'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 }
@@ -13,8 +13,8 @@ serve(async (req) => {
   }
 
   try {
-    const canvasId = Deno.env.get('CANVAS_ID');
-    const canvasSecret = Deno.env.get('CANVAS_SECRET');
+    const canvasId = Deno.env.get('CANVAS_PUBLIC_KEY');
+    const canvasSecret = Deno.env.get('CANVAS_PRIVATE');
 
     if (!canvasId || !canvasSecret) {
       throw new Error('Canvas credentials not configured');
@@ -24,7 +24,7 @@ serve(async (req) => {
     
     if (!code) {
       // Return authorization URL for initial OAuth flow
-      const authUrl = new URL('https://secure.canvasmedical.com/oauth/authorize');
+      const authUrl = new URL('https://xpc-dev.canvasmedical.com/auth/authorize/');
       authUrl.searchParams.set('client_id', canvasId);
       authUrl.searchParams.set('response_type', 'code');
       authUrl.searchParams.set('scope', 'read write');
@@ -41,7 +41,7 @@ serve(async (req) => {
     }
 
     // Exchange authorization code for access token
-    const tokenResponse = await fetch('https://secure.canvasmedical.com/oauth/token', {
+    const tokenResponse = await fetch('https://xpc-dev.canvasmedical.com/auth/token/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',

@@ -2,7 +2,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const corsHeaders = {
-  'Access-Control-Allow-Origin': window?.location?.origin || 'https://ddjjtumgquimsgqwkgvd.supabase.co',
+  'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 }
@@ -107,7 +107,7 @@ serve(async (req) => {
     console.log('Starting Canvas data sync...');
 
     // Fetch patients from Canvas FHIR API
-    const patientsResponse = await fetch('https://secure.canvasmedical.com/api/fhir/Patient', {
+    const patientsResponse = await fetch('https://xpc-dev.canvasmedical.com/api/fhir/Patient', {
       headers: {
         'Authorization': `Bearer ${accessToken}`,
         'Accept': 'application/fhir+json',
@@ -174,7 +174,7 @@ serve(async (req) => {
       }
 
       // Fetch conditions for this patient
-      const conditionsResponse = await fetch(`https://secure.canvasmedical.com/api/fhir/Condition?patient=${patient.id}`, {
+      const conditionsResponse = await fetch(`https://xpc-dev.canvasmedical.com/api/fhir/Condition?patient=${patient.id}`, {
         headers: {
           'Authorization': `Bearer ${accessToken}`,
           'Accept': 'application/fhir+json',
@@ -207,7 +207,7 @@ serve(async (req) => {
       }
 
       // Fetch vital signs observations
-      const vitalsResponse = await fetch(`https://secure.canvasmedical.com/api/fhir/Observation?patient=${patient.id}&category=vital-signs`, {
+      const vitalsResponse = await fetch(`https://xpc-dev.canvasmedical.com/api/fhir/Observation?patient=${patient.id}&category=vital-signs`, {
         headers: {
           'Authorization': `Bearer ${accessToken}`,
           'Accept': 'application/fhir+json',
