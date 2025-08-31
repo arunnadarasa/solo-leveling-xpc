@@ -14,6 +14,8 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  let patient = null; // Initialize patient variable for error handling scope
+
   try {
     const { patientId, type } = await req.json();
     
@@ -25,7 +27,7 @@ serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     // Fetch patient data
-    const { data: patient, error: patientError } = await supabase
+    const { data: patientData, error: patientError } = await supabase
       .from('patients')
       .select(`
         *,
@@ -36,9 +38,11 @@ serve(async (req) => {
       .eq('id', patientId)
       .single();
 
-    if (patientError || !patient) {
+    if (patientError || !patientData) {
       throw new Error('Patient not found');
     }
+
+    patient = patientData; // Set patient for error handling scope
 
     let analysisResult;
 
@@ -55,23 +59,41 @@ serve(async (req) => {
       throw new Error('Invalid analysis type');
     }
 
-    // Update or create risk assessment with new analysis
-    const { data: updatedAssessment, error: updateError } = await supabase
+    // Check for existing risk assessment to update instead of creating duplicates
+    const { data: existingAssessment } = await supabase
       .from('risk_assessments')
-      .upsert({
-        patient_id: patientId,
-        overall_risk_score: analysisResult.riskScore,
-        risk_level: analysisResult.riskLevel,
-        risk_factors: analysisResult.riskFactors,
-        phenoml_analysis: type === 'phenoml' ? analysisResult : null,
-        metriport_data: type === 'metriport' ? analysisResult : null,
-        ai_consultation: type === 'keywell' ? analysisResult.aiConsultation : null,
-        ai_recommendations: analysisResult.recommendations,
-        assessment_date: new Date().toISOString(),
-        expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 24 hours
-      })
-      .select()
+      .select('id')
+      .eq('patient_id', patientId)
+      .order('assessment_date', { ascending: false })
+      .limit(1)
       .single();
+
+    const assessmentData = {
+      patient_id: patientId,
+      overall_risk_score: analysisResult.riskScore,
+      risk_level: analysisResult.riskLevel,
+      risk_factors: analysisResult.riskFactors,
+      phenoml_analysis: type === 'phenoml' ? analysisResult : null,
+      metriport_data: type === 'metriport' ? analysisResult : null,
+      ai_consultation: type === 'keywell' ? analysisResult.aiConsultation : null,
+      ai_recommendations: analysisResult.recommendations,
+      assessment_date: new Date().toISOString(),
+      expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 24 hours
+    };
+
+    // Update existing or create new assessment
+    const { data: updatedAssessment, error: updateError } = existingAssessment
+      ? await supabase
+          .from('risk_assessments')
+          .update(assessmentData)
+          .eq('id', existingAssessment.id)
+          .select()
+          .single()
+      : await supabase
+          .from('risk_assessments')
+          .insert(assessmentData)
+          .select()
+          .single();
 
     if (updateError) {
       throw updateError;
@@ -91,6 +113,7 @@ serve(async (req) => {
     // Provide more specific error messages
     let errorMessage = error.message;
     let errorCode = 'ANALYSIS_ERROR';
+    let shouldRetry = false;
     
     if (error.message.includes('Patient not found')) {
       errorCode = 'PATIENT_NOT_FOUND';
@@ -99,16 +122,65 @@ serve(async (req) => {
       errorMessage = 'Keywell AI service is not configured. Please check API credentials.';
     } else if (error.message.includes('Session initialization failed')) {
       errorCode = 'KEYWELL_SESSION_ERROR';
-      errorMessage = 'Unable to connect to Keywell AI service. The service may be temporarily unavailable.';
+      errorMessage = 'Keywell AI service is temporarily unavailable. Falling back to simulated analysis.';
+      shouldRetry = true;
+      
+      // Fallback to simulated analysis when Keywell fails
+      if (patient) {
+        try {
+          console.log('Falling back to PhenoML simulation due to Keywell failure');
+          const fallbackResult = await simulatePhenoMLAnalysis(patient);
+          
+          // Initialize Supabase client for fallback
+          const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+          const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+          const supabase = createClient(supabaseUrl, supabaseKey);
+          
+          // Get patient ID from the request context
+          const { patientId } = await req.clone().json();
+          
+          // Update with fallback data
+          const { data: fallbackAssessment, error: fallbackError } = await supabase
+            .from('risk_assessments')
+            .upsert({
+              patient_id: patientId,
+              overall_risk_score: fallbackResult.riskScore,
+              risk_level: fallbackResult.riskLevel,
+              risk_factors: fallbackResult.riskFactors,
+              phenoml_analysis: fallbackResult,
+              ai_recommendations: fallbackResult.recommendations,
+              assessment_date: new Date().toISOString(),
+              expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+            })
+            .select()
+            .single();
+
+          if (!fallbackError) {
+            return new Response(JSON.stringify({
+              success: true,
+              analysis: fallbackResult,
+              assessment: fallbackAssessment,
+              fallback: true,
+              originalError: error.message
+            }), {
+              headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            });
+          }
+        } catch (fallbackError) {
+          console.error('Fallback analysis also failed:', fallbackError);
+        }
+      }
     } else if (error.message.includes('Consultation failed')) {
       errorCode = 'KEYWELL_CONSULTATION_ERROR';
       errorMessage = 'AI consultation failed. Please try again or use an alternative analysis method.';
+      shouldRetry = true;
     }
     
     return new Response(JSON.stringify({ 
       error: errorMessage,
       errorCode,
       success: false,
+      shouldRetry,
       timestamp: new Date().toISOString()
     }), {
       status: 500,

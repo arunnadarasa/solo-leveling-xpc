@@ -73,9 +73,12 @@ export const useProgressivePatients = () => {
     try {
       const patientIds = basicPatients.map(p => p.id);
       
-      // Fetch all related data in parallel
+      // Fetch all related data in parallel - prioritize risk assessments with AI data
       const [riskAssessments, clinicalAlerts, conditions, vitals] = await Promise.all([
-        supabase.from('risk_assessments').select('*').in('patient_id', patientIds),
+        supabase.from('risk_assessments')
+          .select('*')
+          .in('patient_id', patientIds)
+          .order('assessment_date', { ascending: false }),
         supabase.from('clinical_alerts').select('*').in('patient_id', patientIds).eq('is_active', true),
         supabase.from('patient_conditions').select('*').in('patient_id', patientIds),
         supabase.from('patient_vitals').select('*').in('patient_id', patientIds).order('recorded_at', { ascending: false })
@@ -114,7 +117,8 @@ export const useProgressivePatients = () => {
         const patientConditions = conditionsByPatient.get(patient.id) || [];
         const patientVitals = vitalsByPatient.get(patient.id) || [];
 
-        const latestRiskAssessment = patientRisks[0];
+        // Prioritize risk assessment with AI consultation data
+        const latestRiskAssessment = patientRisks.find(risk => risk.ai_consultation) || patientRisks[0];
         const latestVitals = patientVitals[0];
 
         return {

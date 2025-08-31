@@ -73,7 +73,7 @@ export const PatientDashboard = () => {
     }
   };
 
-  const runAIAnalysis = async (type: 'phenoml' | 'metriport' | 'keywell') => {
+  const runAIAnalysis = async (type: 'phenoml' | 'metriport' | 'keywell', retryCount = 0) => {
     if (!selectedPatient) {
       toast({
         title: "No Patient Selected",
@@ -97,13 +97,35 @@ export const PatientDashboard = () => {
 
       if (!data?.success) {
         const errorMessage = getErrorMessage(data?.errorCode, data?.error);
+        
+        // Auto-retry for certain failures
+        if (data?.shouldRetry && retryCount < 2) {
+          console.log(`Retrying AI analysis (attempt ${retryCount + 1})`);
+          setIsAnalyzing(false);
+          await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds
+          return runAIAnalysis(type, retryCount + 1);
+        }
+        
         throw new Error(errorMessage);
       }
 
+      const analysisType = data?.fallback ? 'backup analysis' : `${type === 'phenoml' ? 'PhenoML' : type === 'metriport' ? 'Metriport' : 'Keywell MedGemma'} analysis`;
       toast({
         title: `${type === 'phenoml' ? 'PhenoML' : type === 'metriport' ? 'Metriport' : 'Keywell MedGemma'} Analysis Complete`,
-        description: `AI analysis completed successfully. Risk score updated to ${data.analysis.riskScore}`,
+        description: `${analysisType} completed successfully. Risk score updated to ${data.analysis.riskScore}`,
+        variant: data?.fallback ? "default" : "default"
       });
+
+      // Show fallback notice if applicable
+      if (data?.fallback) {
+        setTimeout(() => {
+          toast({
+            title: "Service Notice",
+            description: "Keywell AI was unavailable, used backup analysis instead.",
+            variant: "default"
+          });
+        }, 1000);
+      }
 
       // Refresh patient data
       await refetch();
