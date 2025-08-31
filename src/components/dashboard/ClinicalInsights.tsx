@@ -28,9 +28,10 @@ import { useIsMobile } from '@/hooks/use-mobile';
 
 interface ClinicalInsightsProps {
   patient: Patient;
+  onDataUpdate?: () => void;
 }
 
-export const ClinicalInsights = ({ patient }: ClinicalInsightsProps) => {
+export const ClinicalInsights = ({ patient, onDataUpdate }: ClinicalInsightsProps) => {
   const { toast } = useToast();
   const [isRunningChartReview, setIsRunningChartReview] = useState(false);
   const isMobile = useIsMobile();
@@ -49,8 +50,8 @@ export const ClinicalInsights = ({ patient }: ClinicalInsightsProps) => {
         description: `Chart quality score: ${data.chartQualityScore}%`,
       });
       
-      // Refresh the page to show updated data
-      window.location.reload();
+      // Refresh data to show updated chart review
+      onDataUpdate?.();
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Chart review failed. Please try again later.';
       console.error('Chart review error:', error);

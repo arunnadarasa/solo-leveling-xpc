@@ -319,7 +319,7 @@ export const PatientDashboard = () => {
                           </Card>
 
                           <RiskVisualization patient={selectedPatient} />
-                          <ClinicalInsights patient={selectedPatient} />
+                          <ClinicalInsights patient={selectedPatient} onDataUpdate={refetch} />
                         </>
                       )}
                     </>
