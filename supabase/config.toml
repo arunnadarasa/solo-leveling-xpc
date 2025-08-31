@@ -42,3 +42,9 @@ enable_confirmations = false
 
 [functions.clinical-ai-analysis]
 verify_jwt = false
+
+[functions.canvas-auth]
+verify_jwt = false
+
+[functions.canvas-sync]
+verify_jwt = false

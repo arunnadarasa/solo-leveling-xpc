@@ -15,6 +15,7 @@ import { PatientListSkeleton, PatientDetailsSkeleton } from '@/components/ui/pat
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { CanvasIntegration } from '@/components/canvas/CanvasIntegration';
 
 export interface Patient {
   id: string;
@@ -113,6 +114,10 @@ export const PatientDashboard = () => {
         />
 
         <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+          {/* Canvas Integration Section */}
+          <div className="mb-8">
+            <CanvasIntegration />
+          </div>
 
           {/* Overview Cards - Mobile Responsive */}
           <div className="mobile-grid-responsive">
