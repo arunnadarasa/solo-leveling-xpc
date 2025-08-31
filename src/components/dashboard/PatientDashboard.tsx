@@ -10,7 +10,8 @@ import { ClinicalInsights } from './ClinicalInsights';
 import { DemoControls } from '../demo/DemoControls';
 import { MobileHeader } from '@/components/ui/mobile-header';
 import { FloatingActionButton } from '@/components/ui/floating-action-button';
-import { usePatients } from '@/hooks/usePatients';
+import { useProgressivePatients } from '@/hooks/useProgressivePatients';
+import { PatientListSkeleton, PatientDetailsSkeleton } from '@/components/ui/patient-skeleton';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -38,7 +39,7 @@ export interface Patient {
 export const PatientDashboard = () => {
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const { patients, loading, error, refetch } = usePatients();
+  const { patients, loading, loadingStates, error, refetch } = useProgressivePatients();
   const { toast } = useToast();
 
   const getRiskColor = (level: string) => {
@@ -168,11 +169,16 @@ export const PatientDashboard = () => {
             </Card>
           </div>
 
-          {/* Loading State */}
+          {/* Loading State - Progressive */}
           {loading && (
             <div className="text-center py-8">
               <RefreshCw className="w-8 h-8 animate-spin text-primary mx-auto mb-4" />
-              <p className="text-muted-foreground mobile-text-responsive">Loading patient data...</p>
+              <p className="text-muted-foreground mobile-text-responsive">
+                {loadingStates?.basic ? 'Loading patients...' : 
+                 loadingStates?.details ? 'Loading patient details...' : 
+                 loadingStates?.ai ? 'Generating AI consultations...' : 
+                 'Loading...'}
+              </p>
             </div>
           )}
 
@@ -196,12 +202,16 @@ export const PatientDashboard = () => {
               <div className={isMobile ? "space-y-4" : "grid grid-cols-1 lg:grid-cols-4 gap-6"}>
                 {/* Patient List */}
                 <div className={isMobile ? "" : "lg:col-span-1"}>
-                  <PatientList 
-                    patients={patients}
-                    selectedPatient={selectedPatient}
-                    onSelectPatient={setSelectedPatient}
-                    getRiskColor={getRiskColor}
-                  />
+                  {loading ? (
+                    <PatientListSkeleton />
+                  ) : (
+                    <PatientList 
+                      patients={patients}
+                      selectedPatient={selectedPatient}
+                      onSelectPatient={setSelectedPatient}
+                      getRiskColor={getRiskColor}
+                    />
+                  )}
                   
                   {/* Demo Controls - Hide on mobile when patient selected */}
                   {(!isMobile || !selectedPatient) && (
@@ -219,56 +229,68 @@ export const PatientDashboard = () => {
                 <div className={isMobile ? "space-y-4" : "lg:col-span-3 space-y-6"}>
                   {selectedPatient ? (
                     <>
-                      {/* Patient Header - Mobile Optimized */}
-                      <Card className="mobile-card">
-                        <CardHeader className="pb-3">
-                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
-                            <div className="min-w-0 flex-1">
-                              <CardTitle className="text-lg sm:text-xl truncate">{selectedPatient.name}</CardTitle>
-                              <CardDescription className="mobile-text-responsive">
-                                Age {selectedPatient.age} • MRN: {selectedPatient.mrn}
-                              </CardDescription>
-                            </div>
-                            <div className="flex flex-wrap items-center gap-2">
-                              <Badge className={`bg-${getRiskColor(selectedPatient.riskLevel)} text-${getRiskColor(selectedPatient.riskLevel)}-foreground`}>
-                                Risk: {selectedPatient.riskScore}
-                              </Badge>
-                              {selectedPatient.alerts > 0 && (
-                                <Badge variant="destructive">
-                                  {selectedPatient.alerts} Alerts
-                                </Badge>
-                              )}
-                            </div>
-                          </div>
-                        </CardHeader>
-                        <CardContent className="pt-0">
-                          <div className="mobile-vitals-grid">
-                            {selectedPatient.vitals && (
-                              <>
-                                <div className="text-center p-2 rounded-lg bg-muted/50">
-                                  <div className="text-xs sm:text-sm text-muted-foreground">Blood Pressure</div>
-                                  <div className="font-semibold text-sm sm:text-base">{selectedPatient.vitals.bloodPressure}</div>
+                      {/* Show skeleton while details are loading */}
+                      {loadingStates?.details ? (
+                        <PatientDetailsSkeleton />
+                      ) : (
+                        <>
+                          {/* Patient Header - Mobile Optimized */}
+                          <Card className="mobile-card">
+                            <CardHeader className="pb-3">
+                              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
+                                <div className="min-w-0 flex-1">
+                                  <CardTitle className="text-lg sm:text-xl truncate">{selectedPatient.name}</CardTitle>
+                                  <CardDescription className="mobile-text-responsive">
+                                    Age {selectedPatient.age} • MRN: {selectedPatient.mrn}
+                                  </CardDescription>
                                 </div>
-                                <div className="text-center p-2 rounded-lg bg-muted/50">
-                                  <div className="text-xs sm:text-sm text-muted-foreground">Heart Rate</div>
-                                  <div className="font-semibold text-sm sm:text-base">{selectedPatient.vitals.heartRate} bpm</div>
+                                <div className="flex flex-wrap items-center gap-2">
+                                  <Badge className={`bg-${getRiskColor(selectedPatient.riskLevel)} text-${getRiskColor(selectedPatient.riskLevel)}-foreground`}>
+                                    Risk: {selectedPatient.riskScore}
+                                  </Badge>
+                                  {selectedPatient.alerts > 0 && (
+                                    <Badge variant="destructive">
+                                      {selectedPatient.alerts} Alerts
+                                    </Badge>
+                                  )}
+                                  {loadingStates?.ai && (
+                                    <Badge variant="outline" className="animate-pulse">
+                                      AI Processing...
+                                    </Badge>
+                                  )}
                                 </div>
-                                <div className="text-center p-2 rounded-lg bg-muted/50">
-                                  <div className="text-xs sm:text-sm text-muted-foreground">Temperature</div>
-                                  <div className="font-semibold text-sm sm:text-base">{selectedPatient.vitals.temperature}°F</div>
-                                </div>
-                                <div className="text-center p-2 rounded-lg bg-muted/50">
-                                  <div className="text-xs sm:text-sm text-muted-foreground">O2 Sat</div>
-                                  <div className="font-semibold text-sm sm:text-base">{selectedPatient.vitals.oxygenSat}%</div>
-                                </div>
-                              </>
-                            )}
-                          </div>
-                        </CardContent>
-                      </Card>
+                              </div>
+                            </CardHeader>
+                            <CardContent className="pt-0">
+                              <div className="mobile-vitals-grid">
+                                {selectedPatient.vitals && (
+                                  <>
+                                    <div className="text-center p-2 rounded-lg bg-muted/50">
+                                      <div className="text-xs sm:text-sm text-muted-foreground">Blood Pressure</div>
+                                      <div className="font-semibold text-sm sm:text-base">{selectedPatient.vitals.bloodPressure}</div>
+                                    </div>
+                                    <div className="text-center p-2 rounded-lg bg-muted/50">
+                                      <div className="text-xs sm:text-sm text-muted-foreground">Heart Rate</div>
+                                      <div className="font-semibold text-sm sm:text-base">{selectedPatient.vitals.heartRate} bpm</div>
+                                    </div>
+                                    <div className="text-center p-2 rounded-lg bg-muted/50">
+                                      <div className="text-xs sm:text-sm text-muted-foreground">Temperature</div>
+                                      <div className="font-semibold text-sm sm:text-base">{selectedPatient.vitals.temperature}°F</div>
+                                    </div>
+                                    <div className="text-center p-2 rounded-lg bg-muted/50">
+                                      <div className="text-xs sm:text-sm text-muted-foreground">O2 Sat</div>
+                                      <div className="font-semibold text-sm sm:text-base">{selectedPatient.vitals.oxygenSat}%</div>
+                                    </div>
+                                  </>
+                                )}
+                              </div>
+                            </CardContent>
+                          </Card>
 
-                      <RiskVisualization patient={selectedPatient} />
-                      <ClinicalInsights patient={selectedPatient} />
+                          <RiskVisualization patient={selectedPatient} />
+                          <ClinicalInsights patient={selectedPatient} />
+                        </>
+                      )}
                     </>
                   ) : (
                     <Card className="mobile-card h-64 sm:h-96 flex items-center justify-center">
