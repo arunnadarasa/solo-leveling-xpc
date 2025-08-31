@@ -1,7 +1,9 @@
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { AlertTriangle, Calendar, User } from 'lucide-react';
+import { PatientSearch } from './PatientSearch';
 import { Patient } from './PatientDashboard';
 
 interface PatientListProps {
@@ -12,19 +14,29 @@ interface PatientListProps {
 }
 
 export const PatientList = ({ patients, selectedPatient, onSelectPatient, getRiskColor }: PatientListProps) => {
-  // Sort patients by risk score (highest first)
-  const sortedPatients = [...patients].sort((a, b) => b.riskScore - a.riskScore);
+  const [filteredPatients, setFilteredPatients] = useState<Patient[]>(patients);
+
+  useEffect(() => {
+    setFilteredPatients(patients);
+  }, [patients]);
+
+  // Sort filtered patients by risk score (highest first)
+  const sortedPatients = [...filteredPatients].sort((a, b) => b.riskScore - a.riskScore);
 
   return (
     <Card className="h-[800px]">
       <CardHeader>
         <CardTitle className="flex items-center">
           <User className="w-5 h-5 mr-2" />
-          Patient List
+          Patient List ({filteredPatients.length})
         </CardTitle>
       </CardHeader>
       <CardContent className="p-0">
-        <ScrollArea className="h-[700px] px-4">
+        <PatientSearch 
+          patients={patients} 
+          onFilteredPatientsChange={setFilteredPatients} 
+        />
+        <ScrollArea className="h-[600px] px-4">
           <div className="space-y-3">
             {sortedPatients.map((patient) => (
               <div

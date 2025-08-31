@@ -250,18 +250,18 @@ export const ClinicalInsights = ({ patient }: ClinicalInsightsProps) => {
                         </Badge>
                       </div>
                       <div className="space-y-3">
-                        <div>
-                          <h4 className="font-medium text-sm mb-1">Clinical Query:</h4>
-                          <p className="text-xs text-muted-foreground bg-muted/50 p-2 rounded">
-                            {assessment.ai_consultation.query.substring(0, 200)}...
-                          </p>
+                        <div className="bg-muted/50 p-3 rounded-md">
+                          <p className="text-sm text-muted-foreground mb-2">Clinical Query:</p>
+                          <p className="text-sm font-mono whitespace-pre-wrap break-words">{assessment.ai_consultation.query}</p>
                         </div>
-                        <div>
-                          <h4 className="font-medium text-sm mb-1">AI Response:</h4>
-                          <div className="text-sm bg-background p-3 rounded border">
-                            {assessment.ai_consultation.response.substring(0, 500)}
-                            {assessment.ai_consultation.response.length > 500 && '...'}
-                          </div>
+                        <div className="bg-primary/5 p-3 rounded-md">
+                          <p className="text-sm text-primary mb-2">AI Response:</p>
+                          <p className="text-sm whitespace-pre-wrap break-words leading-relaxed">
+                            {assessment.ai_consultation.response && assessment.ai_consultation.response.length > 10 
+                              ? assessment.ai_consultation.response 
+                              : "AI consultation is processing. Please wait for the analysis to complete."
+                            }
+                          </p>
                         </div>
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between text-xs text-muted-foreground space-y-1 sm:space-y-0">
                           <span>Session: {assessment.ai_consultation.sessionId?.substring(0, 8)}...</span>

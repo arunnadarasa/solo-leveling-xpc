@@ -418,7 +418,11 @@ Please provide clinical decision support recommendations based on current medica
     const aiResponse = consultationData.predictions?.ResponseText || 
                       consultationData.predictions?.[0]?.ResponseText || 
                       consultationData.predictions?.[0]?.response || 
+                      consultationData.response || 
                       'No response received';
+    
+    console.log('Full consultation response:', JSON.stringify(consultationData, null, 2));
+    console.log('Extracted AI response:', aiResponse.substring(0, 200));
 
     console.log('MedGemma response received');
 
