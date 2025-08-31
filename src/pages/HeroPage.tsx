@@ -35,26 +35,22 @@ return (
         <div className="glass-orb w-20 h-20 absolute top-1/3 right-1/3 animate-particle-float animation-delay-[7s]" />
       </div>
 
-      {/* Video Background */}
-      <div className="absolute inset-0 z-0 bg-gradient-to-br from-background/90 via-background/70 to-background/90">
-        <video
-          className="w-full h-full object-contain"
-          autoPlay
-          muted
-          loop
-          playsInline
-          onLoadedData={() => setIsVideoLoaded(true)}
-        >
-          <source
-            src="https://ddjjtumgquimsgqwkgvd.supabase.co/storage/v1/object/public/hero/hero.mp4"
-            type="video/mp4"
-          />
-        </video>
-        {/* Enhanced Glass Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/60 to-background/95" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/10 to-background/90" />
-        <div className="absolute inset-0 gradient-mesh" />
-      </div>
+      {/* Video Background - Full Screen */}
+      <video
+        className="absolute inset-0 w-full h-full object-cover z-0"
+        autoPlay
+        muted
+        loop
+        playsInline
+        onLoadedData={() => setIsVideoLoaded(true)}
+      >
+        <source
+          src="https://ddjjtumgquimsgqwkgvd.supabase.co/storage/v1/object/public/hero/hero.mp4"
+          type="video/mp4"
+        />
+      </video>
+      {/* Subtle overlay for text readability */}
+      <div className="absolute inset-0 bg-background/20 z-[1]" />
 
       {/* Hero Content */}
       <div className="relative z-10 min-h-screen flex items-center justify-center px-4">
