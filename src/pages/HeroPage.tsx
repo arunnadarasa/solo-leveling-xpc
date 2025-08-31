@@ -26,18 +26,21 @@ const HeroPage = () => {
   };
 
 return (
-    <div className="min-h-screen bg-background relative overflow-hidden">
-      {/* Floating Glass Orbs */}
+    <div className="bg-background relative overflow-hidden">
+      {/* Floating Glass Orbs - Extended across full page */}
       <div className="absolute inset-0 z-5 pointer-events-none">
         <div className="glass-orb w-32 h-32 absolute top-20 left-10 animate-particle-float animation-delay-[1s]" />
         <div className="glass-orb w-24 h-24 absolute top-40 right-20 animate-particle-float animation-delay-[3s]" />
         <div className="glass-orb w-40 h-40 absolute bottom-32 left-1/4 animate-particle-float animation-delay-[5s]" />
         <div className="glass-orb w-20 h-20 absolute top-1/3 right-1/3 animate-particle-float animation-delay-[7s]" />
+        {/* Additional orbs for features section */}
+        <div className="glass-orb w-28 h-28 absolute bottom-96 right-10 animate-particle-float animation-delay-[2s]" />
+        <div className="glass-orb w-36 h-36 absolute bottom-64 left-20 animate-particle-float animation-delay-[6s]" />
       </div>
 
-      {/* Video Background - Full Screen */}
+      {/* Video Background - Full Page Coverage */}
       <video
-        className="absolute inset-0 w-full h-full object-cover z-0"
+        className="fixed inset-0 w-full h-full object-cover z-0"
         autoPlay
         muted
         loop
@@ -49,9 +52,9 @@ return (
           type="video/mp4"
         />
       </video>
-      {/* Enhanced overlay for better text readability */}
-      <div className="absolute inset-0 bg-black/40 z-[1]" />
-      <div className="absolute inset-0 bg-gradient-to-b from-background/10 via-transparent to-background/30 z-[1]" />
+      {/* Enhanced overlay for better text readability - Full page coverage */}
+      <div className="fixed inset-0 bg-black/40 z-[1]" />
+      <div className="fixed inset-0 bg-gradient-to-b from-background/10 via-transparent to-background/30 z-[1]" />
 
       {/* Hero Content */}
       <div className="relative z-10 min-h-screen flex items-center justify-center px-4">
@@ -129,15 +132,15 @@ return (
         </div>
       </div>
 
-      {/* Enhanced Features Section */}
-      <section id="features" className="relative z-10 py-20 px-4 glass-light">
+      {/* Enhanced Features Section with Hero-level UX */}
+      <section id="features" className="relative z-10 py-20 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-20">
-            <div className="glass-card p-8 max-w-4xl mx-auto">
-              <h2 className="text-3xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
+            <div className="glass-card p-8 md:p-12 max-w-4xl mx-auto bg-background/30 backdrop-blur-xl border border-white/20 shadow-2xl">
+              <h2 className="text-3xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent [text-shadow:_0_2px_10px_rgb(0_0_0_/_40%)]">
                 Level Up Your Healthcare
               </h2>
-              <p className="text-xl text-foreground/80 max-w-3xl mx-auto">
+              <p className="text-xl text-foreground max-w-3xl mx-auto [text-shadow:_0_1px_3px_rgb(0_0_0_/_30%)]">
                 Solo Leveling transforms healthcare delivery through advanced AI analysis, 
                 real-time patient monitoring, and intelligent clinical decision support.
               </p>
@@ -145,40 +148,40 @@ return (
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Enhanced Glass Feature Cards */}
-            <div className="group floating-glass p-10 glass-hover animate-glass-morph">
+            {/* Enhanced Glass Feature Cards with Hero-level styling */}
+            <div className="group floating-glass p-10 glass-hover animate-glass-morph bg-background/30 backdrop-blur-xl border border-white/20 shadow-2xl">
               <div className="mb-8">
-                <div className="w-20 h-20 rounded-full glass-glow bg-gradient-to-r from-primary/80 to-accent/80 flex items-center justify-center mb-6 group-hover:scale-125 group-hover:animate-glow-pulse transition-all duration-500">
-                  <Zap className="h-10 w-10 text-white" />
+                <div className="w-20 h-20 rounded-full glass-glow bg-gradient-to-r from-primary/80 to-accent/80 flex items-center justify-center mb-6 group-hover:scale-125 group-hover:animate-glow-pulse transition-all duration-500 shadow-2xl">
+                  <Zap className="h-10 w-10 text-white drop-shadow-lg" />
                 </div>
-                <h3 className="text-2xl font-bold mb-4 text-primary">AI-Powered Analysis</h3>
-                <p className="text-foreground/80 text-lg leading-relaxed">
+                <h3 className="text-2xl font-bold mb-4 text-primary [text-shadow:_0_1px_3px_rgb(0_0_0_/_30%)]">AI-Powered Analysis</h3>
+                <p className="text-foreground text-lg leading-relaxed [text-shadow:_0_1px_2px_rgb(0_0_0_/_20%)]">
                   Advanced machine learning algorithms analyze patient data to provide 
                   accurate risk assessments and clinical insights.
                 </p>
               </div>
             </div>
 
-            <div className="group floating-glass p-10 glass-hover animate-glass-morph animation-delay-200">
+            <div className="group floating-glass p-10 glass-hover animate-glass-morph animation-delay-200 bg-background/30 backdrop-blur-xl border border-white/20 shadow-2xl">
               <div className="mb-8">
-                <div className="w-20 h-20 rounded-full glass-glow bg-gradient-to-r from-accent/80 to-primary/80 flex items-center justify-center mb-6 group-hover:scale-125 group-hover:animate-glow-pulse transition-all duration-500">
-                  <Shield className="h-10 w-10 text-white" />
+                <div className="w-20 h-20 rounded-full glass-glow bg-gradient-to-r from-accent/80 to-primary/80 flex items-center justify-center mb-6 group-hover:scale-125 group-hover:animate-glow-pulse transition-all duration-500 shadow-2xl">
+                  <Shield className="h-10 w-10 text-white drop-shadow-lg" />
                 </div>
-                <h3 className="text-2xl font-bold mb-4 text-accent">Secure & Compliant</h3>
-                <p className="text-foreground/80 text-lg leading-relaxed">
+                <h3 className="text-2xl font-bold mb-4 text-accent [text-shadow:_0_1px_3px_rgb(0_0_0_/_30%)]">Secure & Compliant</h3>
+                <p className="text-foreground text-lg leading-relaxed [text-shadow:_0_1px_2px_rgb(0_0_0_/_20%)]">
                   Built with enterprise-grade security and full HIPAA compliance 
                   to protect sensitive patient information.
                 </p>
               </div>
             </div>
 
-            <div className="group floating-glass p-10 glass-hover animate-glass-morph animation-delay-400">
+            <div className="group floating-glass p-10 glass-hover animate-glass-morph animation-delay-400 bg-background/30 backdrop-blur-xl border border-white/20 shadow-2xl">
               <div className="mb-8">
-                <div className="w-20 h-20 rounded-full glass-glow bg-gradient-to-r from-primary/80 to-accent/80 flex items-center justify-center mb-6 group-hover:scale-125 group-hover:animate-glow-pulse transition-all duration-500">
-                  <Activity className="h-10 w-10 text-white" />
+                <div className="w-20 h-20 rounded-full glass-glow bg-gradient-to-r from-primary/80 to-accent/80 flex items-center justify-center mb-6 group-hover:scale-125 group-hover:animate-glow-pulse transition-all duration-500 shadow-2xl">
+                  <Activity className="h-10 w-10 text-white drop-shadow-lg" />
                 </div>
-                <h3 className="text-2xl font-bold mb-4 text-primary">Real-time Monitoring</h3>
-                <p className="text-foreground/80 text-lg leading-relaxed">
+                <h3 className="text-2xl font-bold mb-4 text-primary [text-shadow:_0_1px_3px_rgb(0_0_0_/_30%)]">Real-time Monitoring</h3>
+                <p className="text-foreground text-lg leading-relaxed [text-shadow:_0_1px_2px_rgb(0_0_0_/_20%)]">
                   Continuous patient monitoring with instant alerts for critical 
                   changes in patient status and risk factors.
                 </p>
@@ -186,13 +189,13 @@ return (
             </div>
           </div>
 
-          {/* Glass Bottom CTA */}
+          {/* Enhanced Glass Bottom CTA with Hero-level styling */}
           <div className="text-center mt-20">
-            <div className="glass-card p-8 inline-block">
+            <div className="glass-card p-8 inline-block bg-background/30 backdrop-blur-xl border border-white/20 shadow-2xl">
               <Button
                 size="lg"
                 onClick={handleGetStarted}
-                className="glass-heavy bg-gradient-to-r from-primary/90 to-accent/90 hover:from-primary hover:to-accent transform hover:scale-110 transition-all duration-500 px-16 py-6 text-xl shadow-2xl hover:shadow-primary/50 animate-glow-pulse border-0 backdrop-blur-xl"
+                className="glass-heavy bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 transform hover:scale-110 transition-all duration-500 px-16 py-6 text-xl shadow-2xl hover:shadow-primary/50 animate-glow-pulse border border-white/20 backdrop-blur-xl text-white font-semibold [text-shadow:_0_1px_3px_rgb(0_0_0_/_40%)]"
               >
                 Start Your Journey
               </Button>
