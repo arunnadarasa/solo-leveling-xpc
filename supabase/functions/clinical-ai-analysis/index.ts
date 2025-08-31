@@ -415,7 +415,10 @@ Please provide clinical decision support recommendations based on current medica
     }
 
     const consultationData = await consultationResponse.json();
-    const aiResponse = consultationData.predictions?.[0]?.response || 'No response received';
+    const aiResponse = consultationData.predictions?.ResponseText || 
+                      consultationData.predictions?.[0]?.ResponseText || 
+                      consultationData.predictions?.[0]?.response || 
+                      'No response received';
 
     console.log('MedGemma response received');
 
