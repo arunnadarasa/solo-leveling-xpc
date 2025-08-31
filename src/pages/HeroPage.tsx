@@ -49,81 +49,82 @@ return (
           type="video/mp4"
         />
       </video>
-      {/* Subtle overlay for text readability */}
-      <div className="absolute inset-0 bg-background/20 z-[1]" />
+      {/* Enhanced overlay for better text readability */}
+      <div className="absolute inset-0 bg-black/40 z-[1]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-background/10 via-transparent to-background/30 z-[1]" />
 
       {/* Hero Content */}
       <div className="relative z-10 min-h-screen flex items-center justify-center px-4">
-        {/* Main Glass Container */}
-        <div className="glass-card p-8 md:p-12 max-w-4xl mx-auto text-center space-y-8 glass-hover animate-glass-morph">
+        {/* Main Glass Container with Enhanced Readability */}
+        <div className="glass-card p-8 md:p-12 max-w-4xl mx-auto text-center space-y-8 glass-hover animate-glass-morph bg-background/30 backdrop-blur-xl border border-white/20 shadow-2xl">
           {/* Floating Logo Container */}
-          <div className="floating-glass p-6 rounded-2xl animate-fade-in mb-8">
+          <div className="floating-glass p-6 rounded-2xl animate-fade-in mb-8 bg-background/40 backdrop-blur-lg border border-white/30">
             <img
               src="https://ddjjtumgquimsgqwkgvd.supabase.co/storage/v1/object/public/hero/logo1.webp"
               alt="Solo Leveling"
-              className="h-20 md:h-32 mx-auto animate-bounce-in animate-glow-pulse"
+              className="h-20 md:h-32 mx-auto animate-bounce-in animate-glow-pulse drop-shadow-2xl"
               onError={(e) => {
                 e.currentTarget.style.display = 'none';
               }}
             />
           </div>
 
-          {/* Main Heading with Glass Effect */}
+          {/* Main Heading with Enhanced Glass Effect */}
           <div className="space-y-6 animate-slide-up relative">
             {/* Shimmer Effect */}
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shimmer" />
-            <h1 className="text-4xl md:text-7xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-fade-in relative z-10">
+            <h1 className="text-4xl md:text-7xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-fade-in relative z-10 drop-shadow-lg [text-shadow:_0_2px_10px_rgb(0_0_0_/_40%)]">
               Solo Leveling
             </h1>
-            <div className="glass-light p-4 rounded-xl animate-fade-in animation-delay-200">
-              <p className="text-lg md:text-2xl text-foreground/90 max-w-2xl mx-auto">
+            <div className="glass-light p-4 rounded-xl animate-fade-in animation-delay-200 bg-background/50 backdrop-blur-md border border-white/20 shadow-xl">
+              <p className="text-lg md:text-2xl text-foreground max-w-2xl mx-auto font-medium [text-shadow:_0_1px_3px_rgb(0_0_0_/_30%)]">
                 Advanced Healthcare AI Platform - Level Up Your Clinical Decision Making
               </p>
             </div>
           </div>
 
-          {/* Floating Glass Badges */}
+          {/* Enhanced Floating Glass Badges */}
           <div className="flex flex-wrap justify-center gap-4 animate-fade-in animation-delay-400">
-            <div className="floating-glass px-6 py-3 rounded-full flex items-center space-x-2 glass-glow">
-              <Zap className="h-5 w-5 text-primary" />
-              <span className="font-medium">AI-Powered Analysis</span>
+            <div className="floating-glass px-6 py-3 rounded-full flex items-center space-x-2 glass-glow bg-background/60 backdrop-blur-lg border border-white/30 shadow-lg">
+              <Zap className="h-5 w-5 text-primary drop-shadow-sm" />
+              <span className="font-medium text-foreground [text-shadow:_0_1px_2px_rgb(0_0_0_/_20%)]">AI-Powered Analysis</span>
             </div>
-            <div className="floating-glass px-6 py-3 rounded-full flex items-center space-x-2 glass-glow animation-delay-200">
-              <Shield className="h-5 w-5 text-accent" />
-              <span className="font-medium">HIPAA Compliant</span>
+            <div className="floating-glass px-6 py-3 rounded-full flex items-center space-x-2 glass-glow animation-delay-200 bg-background/60 backdrop-blur-lg border border-white/30 shadow-lg">
+              <Shield className="h-5 w-5 text-accent drop-shadow-sm" />
+              <span className="font-medium text-foreground [text-shadow:_0_1px_2px_rgb(0_0_0_/_20%)]">HIPAA Compliant</span>
             </div>
-            <div className="floating-glass px-6 py-3 rounded-full flex items-center space-x-2 glass-glow animation-delay-400">
-              <Activity className="h-5 w-5 text-primary" />
-              <span className="font-medium">Real-time Insights</span>
+            <div className="floating-glass px-6 py-3 rounded-full flex items-center space-x-2 glass-glow animation-delay-400 bg-background/60 backdrop-blur-lg border border-white/30 shadow-lg">
+              <Activity className="h-5 w-5 text-primary drop-shadow-sm" />
+              <span className="font-medium text-foreground [text-shadow:_0_1px_2px_rgb(0_0_0_/_20%)]">Real-time Insights</span>
             </div>
           </div>
 
-          {/* Glass CTA Buttons */}
+          {/* Enhanced Glass CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-6 justify-center animate-fade-in animation-delay-600">
             <Button
               size="lg"
               onClick={handleGetStarted}
-              className="glass-heavy bg-gradient-to-r from-primary/80 to-accent/80 hover:from-primary hover:to-accent transform hover:scale-110 transition-all duration-500 px-10 py-4 text-lg shadow-2xl hover:shadow-primary/50 animate-glow-pulse border-0 backdrop-blur-xl"
+              className="glass-heavy bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 transform hover:scale-110 transition-all duration-500 px-10 py-4 text-lg shadow-2xl hover:shadow-primary/50 animate-glow-pulse border border-white/20 backdrop-blur-xl text-white font-semibold [text-shadow:_0_1px_3px_rgb(0_0_0_/_40%)]"
             >
-              <Play className="h-5 w-5 mr-2" />
+              <Play className="h-5 w-5 mr-2 drop-shadow-sm" />
               Get Started
             </Button>
             <Button
               size="lg"
               variant="outline"
               onClick={handleLearnMore}
-              className="glass-medium hover:glass-heavy px-10 py-4 text-lg transform hover:scale-105 transition-all duration-500 border-white/30 hover:border-white/50"
+              className="glass-medium hover:glass-heavy px-10 py-4 text-lg transform hover:scale-105 transition-all duration-500 border-white/40 hover:border-white/60 bg-background/40 hover:bg-background/60 backdrop-blur-lg text-foreground font-semibold [text-shadow:_0_1px_2px_rgb(0_0_0_/_20%)]"
             >
               Learn More
-              <ArrowDown className="h-5 w-5 ml-2" />
+              <ArrowDown className="h-5 w-5 ml-2 drop-shadow-sm" />
             </Button>
           </div>
         </div>
 
-        {/* Floating Scroll Indicator */}
+        {/* Enhanced Floating Scroll Indicator */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
-          <div className="glass-light p-3 rounded-full animate-bounce animate-glow-pulse">
-            <ArrowDown className="h-6 w-6 text-primary" />
+          <div className="glass-light p-3 rounded-full animate-bounce animate-glow-pulse bg-background/50 backdrop-blur-lg border border-white/30 shadow-xl">
+            <ArrowDown className="h-6 w-6 text-primary drop-shadow-sm" />
           </div>
         </div>
       </div>
