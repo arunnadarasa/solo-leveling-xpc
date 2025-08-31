@@ -14,6 +14,109 @@ export type Database = {
   }
   public: {
     Tables: {
+      care_team_actions: {
+        Row: {
+          action_description: string
+          assigned_to: string | null
+          completed_at: string | null
+          created_at: string
+          due_date: string | null
+          id: string
+          notes: string | null
+          patient_id: string
+          priority: string
+          role: string
+          status: string | null
+          updated_at: string
+        }
+        Insert: {
+          action_description: string
+          assigned_to?: string | null
+          completed_at?: string | null
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          notes?: string | null
+          patient_id: string
+          priority: string
+          role: string
+          status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          action_description?: string
+          assigned_to?: string | null
+          completed_at?: string | null
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          notes?: string | null
+          patient_id?: string
+          priority?: string
+          role?: string
+          status?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "care_team_actions_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clinical_alerts: {
+        Row: {
+          acknowledged_at: string | null
+          acknowledged_by: string | null
+          alert_type: string
+          created_at: string
+          description: string
+          id: string
+          is_active: boolean
+          patient_id: string
+          recommended_action: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          alert_type: string
+          created_at?: string
+          description: string
+          id?: string
+          is_active?: boolean
+          patient_id: string
+          recommended_action?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          alert_type?: string
+          created_at?: string
+          description?: string
+          id?: string
+          is_active?: boolean
+          patient_id?: string
+          recommended_action?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clinical_alerts_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       custom_recipes: {
         Row: {
           ai_evaluation: Json | null
@@ -180,6 +283,157 @@ export type Database = {
           },
         ]
       }
+      patient_conditions: {
+        Row: {
+          condition_name: string
+          created_at: string
+          icd_code: string | null
+          id: string
+          notes: string | null
+          onset_date: string | null
+          patient_id: string
+          severity: string | null
+          status: string | null
+          updated_at: string
+        }
+        Insert: {
+          condition_name: string
+          created_at?: string
+          icd_code?: string | null
+          id?: string
+          notes?: string | null
+          onset_date?: string | null
+          patient_id: string
+          severity?: string | null
+          status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          condition_name?: string
+          created_at?: string
+          icd_code?: string | null
+          id?: string
+          notes?: string | null
+          onset_date?: string | null
+          patient_id?: string
+          severity?: string | null
+          status?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "patient_conditions_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      patient_vitals: {
+        Row: {
+          blood_pressure_diastolic: number | null
+          blood_pressure_systolic: number | null
+          bmi: number | null
+          created_at: string
+          heart_rate: number | null
+          height: number | null
+          id: string
+          oxygen_saturation: number | null
+          patient_id: string
+          recorded_at: string
+          recorded_by: string | null
+          temperature: number | null
+          weight: number | null
+        }
+        Insert: {
+          blood_pressure_diastolic?: number | null
+          blood_pressure_systolic?: number | null
+          bmi?: number | null
+          created_at?: string
+          heart_rate?: number | null
+          height?: number | null
+          id?: string
+          oxygen_saturation?: number | null
+          patient_id: string
+          recorded_at?: string
+          recorded_by?: string | null
+          temperature?: number | null
+          weight?: number | null
+        }
+        Update: {
+          blood_pressure_diastolic?: number | null
+          blood_pressure_systolic?: number | null
+          bmi?: number | null
+          created_at?: string
+          heart_rate?: number | null
+          height?: number | null
+          id?: string
+          oxygen_saturation?: number | null
+          patient_id?: string
+          recorded_at?: string
+          recorded_by?: string | null
+          temperature?: number | null
+          weight?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "patient_vitals_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      patients: {
+        Row: {
+          address: Json | null
+          age: number
+          created_at: string
+          date_of_birth: string | null
+          email: string | null
+          emergency_contact: Json | null
+          gender: string | null
+          id: string
+          insurance_info: Json | null
+          mrn: string
+          name: string
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          address?: Json | null
+          age: number
+          created_at?: string
+          date_of_birth?: string | null
+          email?: string | null
+          emergency_contact?: Json | null
+          gender?: string | null
+          id?: string
+          insurance_info?: Json | null
+          mrn: string
+          name: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          address?: Json | null
+          age?: number
+          created_at?: string
+          date_of_birth?: string | null
+          email?: string | null
+          emergency_contact?: Json | null
+          gender?: string | null
+          id?: string
+          insurance_info?: Json | null
+          mrn?: string
+          name?: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       player_achievements: {
         Row: {
           achievement_description: string
@@ -287,6 +541,59 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      risk_assessments: {
+        Row: {
+          ai_recommendations: Json | null
+          assessment_date: string
+          created_at: string
+          expires_at: string
+          id: string
+          metriport_data: Json | null
+          overall_risk_score: number
+          patient_id: string
+          phenoml_analysis: Json | null
+          risk_factors: Json
+          risk_level: string
+          updated_at: string
+        }
+        Insert: {
+          ai_recommendations?: Json | null
+          assessment_date?: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          metriport_data?: Json | null
+          overall_risk_score: number
+          patient_id: string
+          phenoml_analysis?: Json | null
+          risk_factors?: Json
+          risk_level: string
+          updated_at?: string
+        }
+        Update: {
+          ai_recommendations?: Json | null
+          assessment_date?: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          metriport_data?: Json | null
+          overall_risk_score?: number
+          patient_id?: string
+          phenoml_analysis?: Json | null
+          risk_factors?: Json
+          risk_level?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "risk_assessments_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       staff: {
         Row: {
