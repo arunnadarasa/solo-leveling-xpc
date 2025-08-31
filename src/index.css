@@ -163,6 +163,62 @@ All colors MUST be HSL.
   .mobile-bottom-sheet {
     @apply fixed inset-x-0 bottom-0 bg-background border-t rounded-t-xl p-4 transform transition-transform duration-300;
   }
+
+  /* Advanced Glassmorphism Effects */
+  .glass {
+    @apply bg-white/10 backdrop-blur-md border border-white/20;
+  }
+
+  .glass-light {
+    @apply bg-white/5 backdrop-blur-sm border border-white/10;
+  }
+
+  .glass-medium {
+    @apply bg-white/15 backdrop-blur-lg border border-white/25;
+  }
+
+  .glass-heavy {
+    @apply bg-white/20 backdrop-blur-xl border border-white/30;
+  }
+
+  .glass-card {
+    @apply glass rounded-2xl shadow-2xl shadow-primary/10;
+  }
+
+  .glass-hover {
+    @apply transition-all duration-500 hover:bg-white/25 hover:border-white/40 hover:shadow-2xl hover:shadow-primary/20;
+  }
+
+  .glass-glow {
+    @apply shadow-[0_0_40px_rgba(var(--primary),0.3)] border-primary/30;
+  }
+
+  /* Floating Glass Elements */
+  .floating-glass {
+    @apply glass-card animate-float;
+  }
+
+  .glass-orb {
+    @apply rounded-full glass-medium animate-pulse;
+  }
+
+  /* Advanced Gradients */
+  .gradient-mesh {
+    background: linear-gradient(45deg, 
+      hsl(var(--primary) / 0.1),
+      hsl(var(--accent) / 0.1),
+      hsl(var(--primary) / 0.05),
+      transparent
+    );
+  }
+
+  .gradient-radial {
+    background: radial-gradient(circle at center,
+      hsl(var(--primary) / 0.2),
+      hsl(var(--accent) / 0.1),
+      transparent
+    );
+  }
 }
 
 @layer base {

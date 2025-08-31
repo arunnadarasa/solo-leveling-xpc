@@ -117,6 +117,25 @@ export default {
 				float: {
 					'0%, 100%': { transform: 'translateY(0px)' },
 					'50%': { transform: 'translateY(-20px)' }
+				},
+				'glass-morph': {
+					'0%': { transform: 'scale(1) rotate(0deg)', opacity: '0.7' },
+					'50%': { transform: 'scale(1.05) rotate(1deg)', opacity: '0.9' },
+					'100%': { transform: 'scale(1) rotate(0deg)', opacity: '0.7' }
+				},
+				shimmer: {
+					'0%': { transform: 'translateX(-100%)' },
+					'100%': { transform: 'translateX(100%)' }
+				},
+				'particle-float': {
+					'0%': { transform: 'translateY(0px) translateX(0px) scale(1)', opacity: '0' },
+					'10%': { opacity: '1' },
+					'90%': { opacity: '1' },
+					'100%': { transform: 'translateY(-100vh) translateX(50px) scale(0)', opacity: '0' }
+				},
+				'glow-pulse': {
+					'0%, 100%': { boxShadow: '0 0 20px hsl(var(--primary) / 0.5)' },
+					'50%': { boxShadow: '0 0 40px hsl(var(--primary) / 0.8), 0 0 60px hsl(var(--accent) / 0.4)' }
 				}
 			},
 			animation: {
@@ -125,7 +144,11 @@ export default {
 				'fade-in': 'fadeIn 0.3s ease-out',
 				'slide-up': 'slideUp 0.3s ease-out',
 				'bounce-in': 'bounceIn 0.5s ease-out',
-				'float': 'float 3s ease-in-out infinite'
+				'float': 'float 3s ease-in-out infinite',
+				'glass-morph': 'glass-morph 4s ease-in-out infinite',
+				'shimmer': 'shimmer 2s ease-in-out infinite',
+				'particle-float': 'particle-float 8s linear infinite',
+				'glow-pulse': 'glow-pulse 2s ease-in-out infinite'
 			},
 			screens: {
 				'xs': '475px',
