@@ -24,6 +24,7 @@ export interface DbRiskAssessment {
   phenoml_analysis: any;
   metriport_data: any;
   ai_recommendations: any[];
+  ai_consultation: any;
   assessment_date: string;
   expires_at: string;
   created_at: string;
@@ -123,12 +124,41 @@ export const usePatients = () => {
         };
       });
 
+      // Auto-generate AI consultations for patients without recent ones
+      await autoGenerateAIConsultations(formattedPatients);
+
       setPatients(formattedPatients);
     } catch (err) {
       console.error('Error fetching patients:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch patients');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const autoGenerateAIConsultations = async (patients: Patient[]) => {
+    const patientsNeedingConsultation = patients.filter(patient => {
+      const latestAssessment = patient.riskAssessments?.[0];
+      if (!latestAssessment?.ai_consultation) return true;
+      
+      // Check if consultation is older than 24 hours
+      const assessmentDate = new Date(latestAssessment.assessment_date);
+      const now = new Date();
+      const hoursSinceAssessment = (now.getTime() - assessmentDate.getTime()) / (1000 * 60 * 60);
+      
+      return hoursSinceAssessment > 24;
+    });
+
+    // Generate AI consultations for patients who need them
+    for (const patient of patientsNeedingConsultation.slice(0, 3)) { // Limit to 3 at a time
+      try {
+        console.log(`Auto-generating AI consultation for patient: ${patient.name}`);
+        await supabase.functions.invoke('clinical-ai-analysis', {
+          body: { patientId: patient.id, type: 'keywell' }
+        });
+      } catch (error) {
+        console.error(`Failed to generate AI consultation for patient ${patient.id}:`, error);
+      }
     }
   };
 

@@ -544,6 +544,7 @@ export type Database = {
       }
       risk_assessments: {
         Row: {
+          ai_consultation: Json | null
           ai_recommendations: Json | null
           assessment_date: string
           created_at: string
@@ -558,6 +559,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          ai_consultation?: Json | null
           ai_recommendations?: Json | null
           assessment_date?: string
           created_at?: string
@@ -572,6 +574,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          ai_consultation?: Json | null
           ai_recommendations?: Json | null
           assessment_date?: string
           created_at?: string

@@ -232,39 +232,39 @@ export const ClinicalInsights = ({ patient }: ClinicalInsightsProps) => {
         return (
           <div className="space-y-4">
             <h3 className="font-semibold mobile-text-responsive">MedGemma AI Consultation</h3>
-            {patient.riskAssessments?.some((r: any) => r.aiConsultation) ? (
+            {patient.riskAssessments?.some((r: any) => r.ai_consultation) ? (
               <div className="space-y-4">
                 {patient.riskAssessments
-                  .filter((r: any) => r.aiConsultation)
+                  .filter((r: any) => r.ai_consultation)
                   .map((assessment: any, index: number) => (
                     <div key={index} className="p-4 rounded-lg border border-primary/20 bg-primary/5 mobile-card">
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3 space-y-2 sm:space-y-0">
                         <div className="flex items-center space-x-2">
                           <Brain className="w-4 h-4 text-primary" />
                           <span className="font-medium text-primary mobile-text-responsive">
-                            {assessment.aiConsultation.modelVersion}
+                            {assessment.ai_consultation.modelVersion}
                           </span>
                         </div>
                         <Badge variant="secondary" className="self-start sm:self-auto">
-                          {Math.round(assessment.aiConsultation.confidence * 100)}% Confidence
+                          {Math.round(assessment.ai_consultation.confidence * 100)}% Confidence
                         </Badge>
                       </div>
                       <div className="space-y-3">
                         <div>
                           <h4 className="font-medium text-sm mb-1">Clinical Query:</h4>
                           <p className="text-xs text-muted-foreground bg-muted/50 p-2 rounded">
-                            {assessment.aiConsultation.query.substring(0, 200)}...
+                            {assessment.ai_consultation.query.substring(0, 200)}...
                           </p>
                         </div>
                         <div>
                           <h4 className="font-medium text-sm mb-1">AI Response:</h4>
                           <div className="text-sm bg-background p-3 rounded border">
-                            {assessment.aiConsultation.response.substring(0, 500)}
-                            {assessment.aiConsultation.response.length > 500 && '...'}
+                            {assessment.ai_consultation.response.substring(0, 500)}
+                            {assessment.ai_consultation.response.length > 500 && '...'}
                           </div>
                         </div>
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between text-xs text-muted-foreground space-y-1 sm:space-y-0">
-                          <span>Session: {assessment.aiConsultation.sessionId?.substring(0, 8)}...</span>
+                          <span>Session: {assessment.ai_consultation.sessionId?.substring(0, 8)}...</span>
                           <span>Generated: {new Date(assessment.assessment_date).toLocaleString()}</span>
                         </div>
                       </div>
@@ -274,9 +274,9 @@ export const ClinicalInsights = ({ patient }: ClinicalInsightsProps) => {
             ) : (
               <div className="text-center py-8">
                 <Brain className="w-8 h-8 sm:w-12 sm:h-12 text-muted-foreground mx-auto mb-4" />
-                <h4 className="font-medium text-muted-foreground mb-2 mobile-text-responsive">No AI Consultation Available</h4>
+                <h4 className="font-medium text-muted-foreground mb-2 mobile-text-responsive">Generating AI Consultation...</h4>
                 <p className="text-sm text-muted-foreground">
-                  Run Keywell MedGemma analysis to get AI-powered clinical insights
+                  Keywell MedGemma analysis is being generated automatically for this patient
                 </p>
               </div>
             )}

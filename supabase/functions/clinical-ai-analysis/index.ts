@@ -64,6 +64,7 @@ serve(async (req) => {
         risk_factors: analysisResult.riskFactors,
         phenoml_analysis: type === 'phenoml' ? analysisResult : null,
         metriport_data: type === 'metriport' ? analysisResult : null,
+        ai_consultation: type === 'keywell' ? analysisResult.aiConsultation : null,
         ai_recommendations: analysisResult.recommendations,
         assessment_date: new Date().toISOString(),
         expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 24 hours
